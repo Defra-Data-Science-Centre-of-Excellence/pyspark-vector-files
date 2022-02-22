@@ -1,3 +1,5 @@
+[![CI](https://github.com/Defra-Data-Science-Centre-of-Excellence/pyspark-vector-files/actions/workflows/ci.yml/badge.svg)](https://github.com/Defra-Data-Science-Centre-of-Excellence/pyspark-vector-files/actions/workflows/ci.yml)
+
 # PySpark Vector Files
 
 Read vector files into a Spark DataFrame with geometry encoded as WKB.
