@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pyspark_vector_files"
 version = "0.1.0"
-description = "A python library for the Environment Science and Analysis division's geospatial utilities."
+description = "Read vector files into a Spark DataFrame with geometry encoded as WKB."
 authors = ["Ed Fawcett-Taylor <ed.fawcett-taylor@defra.gov.uk>"]
 
 [tool.poetry.dependencies]
