@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>README &#8212; ESA Geo Utils alpha documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to ESA Geo Utils’s documentation!" href="index.html" />
+
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+
+
+          <div class="body" role="main">
+
+  <section id="readme">
+<h1>README<a class="headerlink" href="#readme" title="Permalink to this headline">¶</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="esa-geospatial-utilities">
+<h2>ESA Geospatial Utilities<a class="headerlink" href="#esa-geospatial-utilities" title="Permalink to this headline">¶</a></h2>
+<section id="install">
+<h3>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h3>
+<section id="within-a-databricks-notebook">
+<h4>Within a Databricks notebook<a class="headerlink" href="#within-a-databricks-notebook" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%pip install git+https://github.com/Defra-Data-Science-Centre-of-Excellence/esa_geo_utils
+</pre></div>
+</div>
+</section>
+<section id="from-the-command-line">
+<h4>From the command line<a class="headerlink" href="#from-the-command-line" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python -m pip install git+https://github.com/Defra-Data-Science-Centre-of-Excellence/esa_geo_utils
+</pre></div>
+</div>
+</section>
+</section>
+<section id="local-development">
+<h3>Local development<a class="headerlink" href="#local-development" title="Permalink to this headline">¶</a></h3>
+<p>To ensure compatibility with <a class="reference external" href="https://docs.databricks.com/release-notes/runtime/9.1.html">Databricks Runtime 9.1 LTS</a>, this package was developed on a Linux machine running the <code class="docutils literal notranslate"><span class="pre">Ubuntu</span> <span class="pre">20.04</span> <span class="pre">LTS</span></code> operating system using <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8.10</span></code>, <code class="docutils literal notranslate"><span class="pre">GDAL</span> <span class="pre">3.4.0</span></code>, and <code class="docutils literal notranslate"><span class="pre">spark</span> <span class="pre">3.1.2</span></code>.</p>
+<section id="install-python-3-8-10-using-pyenv">
+<h4>Install <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8.10</span></code> using <a class="reference external" href="https://github.com/pyenv/pyenv">pyenv</a><a class="headerlink" href="#install-python-3-8-10-using-pyenv" title="Permalink to this headline">¶</a></h4>
+<p>See the <code class="docutils literal notranslate"><span class="pre">pyenv-installer</span></code>’s <a class="reference external" href="https://github.com/pyenv/pyenv-installer#installation--update--uninstallation">Installation / Update / Uninstallation</a> instructions.</p>
+<p>Install Python 3.8.10 globally:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pyenv install <span class="m">3</span>.8.10
+</pre></div>
+</div>
+<p>Then install it locally in the repository you’re using:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pyenv <span class="nb">local</span> <span class="m">3</span>.8.10
+</pre></div>
+</div>
+</section>
+<section id="install-gdal-3-4-0">
+<h4>Install <code class="docutils literal notranslate"><span class="pre">GDAL</span> <span class="pre">3.4.0</span></code><a class="headerlink" href="#install-gdal-3-4-0" title="Permalink to this headline">¶</a></h4>
+<p>Add the <a class="reference external" href="https://launchpad.net/~ubuntugis/+archive/ubuntu/ubuntugis-unstable">UbuntuGIS unstable Private Package Archive (PPA)</a>
+and update your package list:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> sudo apt-get update
+</pre></div>
+</div>
+<p>Install <code class="docutils literal notranslate"><span class="pre">gdal</span> <span class="pre">3.4.0</span></code>, I found I also had to install python3-gdal (even though
+I’m going to use poetry to install it in a virtual environment later) to
+avoid version conflicts:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo apt-get install -y gdal-bin<span class="o">=</span><span class="m">3</span>.4.0+dfsg-1~focal0 <span class="se">\</span>
+    libgdal-dev<span class="o">=</span><span class="m">3</span>.4.0+dfsg-1~focal0 <span class="se">\</span>
+    python3-gdal<span class="o">=</span><span class="m">3</span>.4.0+dfsg-1~focal0
+</pre></div>
+</div>
+<p>Verify the installation:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ogrinfo --version
+<span class="c1"># GDAL 3.4.0, released 2021/11/04</span>
+</pre></div>
+</div>
+</section>
+<section id="install-poetry-1-1-12">
+<h4>Install <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">1.1.12</span></code><a class="headerlink" href="#install-poetry-1-1-12" title="Permalink to this headline">¶</a></h4>
+<p>See poetry’s <a class="reference external" href="https://python-poetry.org/docs/#osx--linux--bashonwindows-install-instructions">osx / linux / bashonwindows install instructions</a></p>
+</section>
+<section id="clone-this-repository">
+<h4>Clone this repository<a class="headerlink" href="#clone-this-repository" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/Defra-Data-Science-Centre-of-Excellence/esa_geo_utils.git
+</pre></div>
+</div>
+</section>
+<section id="install-dependencies-using-poetry">
+<h4>Install dependencies using <code class="docutils literal notranslate"><span class="pre">poetry</span></code><a class="headerlink" href="#install-dependencies-using-poetry" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>poetry install
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+          </div>
+
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ESA Geo Utils</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">README</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#esa-geospatial-utilities">ESA Geospatial Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to ESA Geo Utils’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Ed Fawcett-Taylor, Dan Lewis.
+
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+
+      |
+      <a href="_sources/readme.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+
+
+
+  </body>
+</html>
