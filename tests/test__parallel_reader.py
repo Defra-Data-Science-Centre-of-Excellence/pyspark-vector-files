@@ -1,7 +1,7 @@
 """Tests for _pyspark module."""
 from inspect import getsourcelines
 from types import MappingProxyType
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 import pytest
 from osgeo.ogr import Open
@@ -58,14 +58,35 @@ def test__get_properties(first_fileGDB_path: str) -> None:
     assert properties == (2, "C")
 
 
-def test__get_geometry(first_fileGDB_path: str) -> None:
+@pytest.mark.parametrize(
+    argnames=["layer_name", "expected_geometry"],
+    argvalues=[
+        (
+            "first",
+            (
+                bytearray(
+                    b"\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"  # noqa: B950
+                ),
+            ),
+        ),
+        ("third", (None,)),
+    ],
+    ids=[
+        "Has geometry column",
+        "No geometry column",
+    ],
+)
+def test__get_geometry(
+    first_fileGDB_path: str,
+    layer_name: str,
+    expected_geometry: Tuple[Optional[bytearray]],
+) -> None:
     """Geometry from 0th row from 0th layer."""
     data_source = Open(first_fileGDB_path)
-    layer = data_source.GetLayer()
+    layer = data_source.GetLayerByName(layer_name)
     feature = layer.GetFeature(0)
     geometry = _get_geometry(feature)
-    shapely_object = loads(bytes(geometry[0]))
-    assert shapely_object == Point(1, 1)
+    assert geometry == expected_geometry
 
 
 def test__get_features(first_fileGDB_path: str) -> None:
