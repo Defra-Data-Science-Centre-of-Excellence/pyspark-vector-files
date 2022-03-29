@@ -91,7 +91,7 @@ def test__get_data_source_layer_names(first_fileGDB_path: str) -> None:
     layer_names = _get_data_source_layer_names(
         data_source=data_source,
     )
-    assert layer_names == ("second", "first")
+    assert sorted(layer_names) == ["first", "second", "third"]
 
 
 @pytest.mark.parametrize(
@@ -102,9 +102,9 @@ def test__get_data_source_layer_names(first_fileGDB_path: str) -> None:
     ],
     argvalues=[
         ("first", "first", does_not_raise()),
-        ("third", None, raises(ValueError)),
+        ("fourth", None, raises(ValueError)),
         (0, "second", does_not_raise()),
-        (2, None, raises(ValueError)),
+        (3, None, raises(ValueError)),
         (None, "second", does_not_raise()),
     ],
     ids=[
@@ -139,9 +139,9 @@ def test__get_layer_name(
     ],
     argvalues=[
         ("first", "first", does_not_raise()),
-        ("third", None, raises(ValueError)),
+        ("fourth", None, raises(ValueError)),
         (0, "second", does_not_raise()),
-        (2, None, raises(ValueError)),
+        (3, None, raises(ValueError)),
         (None, "second", does_not_raise()),
     ],
     ids=[
