@@ -177,6 +177,21 @@ def first_file_second_layer_pdf(
 
 
 @fixture
+def first_file_third_layer_gdf(
+    layer_column_names: Tuple[str, ...],
+) -> GeoDataFrame:
+    """Second dummy layer."""
+    return GeoDataFrame(
+        data=(
+            (8, "H", None),
+            (9, "I", None),
+        ),
+        columns=layer_column_names,
+        crs="EPSG:27700",
+    )
+
+
+@fixture
 def second_file_first_layer_gdf(
     layer_column_names: Tuple[str, ...],
 ) -> GeoDataFrame:
@@ -236,6 +251,7 @@ def first_fileGDB_path(
     fileGDB_directory_path: Path,
     first_file_first_layer_gdf: GeoDataFrame,
     first_file_second_layer_gdf: GeoDataFrame,
+    first_file_third_layer_gdf: GeoDataFrame,
 ) -> str:
     """Writes dummy layers to FileGDB and returns path as string."""
     path = fileGDB_directory_path / "first.gdb"
@@ -252,6 +268,13 @@ def first_fileGDB_path(
         filename=path_as_string,
         index=False,
         layer="second",
+    )
+
+    first_file_third_layer_gdf.to_file(
+        filename=path_as_string,
+        index=False,
+        layer="third",
+        ignore_fields=["geometry"],
     )
 
     return path_as_string
