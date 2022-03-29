@@ -29,9 +29,13 @@ def _get_properties(feature: Feature) -> Tuple:
     return tuple(field for field in feature)
 
 
-def _get_geometry(feature: Feature) -> Tuple:
-    """Given a GDAL Feature, return the geometry fields."""
-    return (feature.GetGeometryRef().ExportToWkb(),)
+def _get_geometry(feature: Feature) -> Tuple[Optional[bytearray]]:
+    """Given a GDAL Feature, return the geometry field, if there is one."""
+    geometry = feature.GetGeometryRef()
+    if geometry:
+        return (geometry.ExportToWkb(),)
+    else:
+        return (None,)
 
 
 def _get_features(layer: Layer) -> Generator:
