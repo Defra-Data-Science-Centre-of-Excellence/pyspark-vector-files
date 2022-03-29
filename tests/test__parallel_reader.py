@@ -444,4 +444,4 @@ def test__generate_parallel_reader_for_chunks(
 
     assert [
         item.cell_contents for item in parallel_reader.__closure__  # type: ignore[attr-defined] # noqa: B950
-    ]
+    ] == expected_parallel_reader_for_chunks_closures
