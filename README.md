@@ -2,11 +2,17 @@
 
 # PySpark Vector Files
 
-Read [vector files](GDAL vector files) into a Spark DataFrame with geometry encoded as Well Known Binary (WKB).
+Read [vector files](https://gdal.org/drivers/vector/index.html) into a [Spark DataFrame](https://spark.apache.org/docs/latest/sql-programming-guide.html#datasets-and-dataframes) with geometry encoded as [Well Known Binary (WKB)](https://libgeos.org/specifications/wkb/).
 
-Documentation is available [here](https://defra-data-science-centre-of-excellence.github.io/pyspark-vector-files/).
+Full documentation is available [here](https://defra-data-science-centre-of-excellence.github.io/pyspark-vector-files/).
 
-## Install
+## Requirements
+
+This library was developed using [Databricks Runtime 9.1 LTS](https://docs.databricks.com/release-notes/runtime/9.1.html) and uses the versions of `python`, `pandas` and `pyspark` that come pre-installed on that runtime. However, it also requires `GDAL 3.4.0`.
+
+You can install `GDAL` on your cluster using an [init script](https://docs.microsoft.com/en-us/azure/databricks/clusters/init-scripts). See [here](config/install_gdal.sh) for an example.
+
+## Install `pyspark-vector-files`
 
 ### Within a Databricks notebook
 
@@ -33,10 +39,7 @@ sdf = read_vector_files(
 )
 ```
 
-## Requirements
-
-<!-- Explain in more detail -->
-<!-- Use cluster spec for UDF or init scripts -->
+More examples are available [here](https://defra-data-science-centre-of-excellence.github.io/pyspark-vector-files/usage.html).
 
 ## Local development
 
