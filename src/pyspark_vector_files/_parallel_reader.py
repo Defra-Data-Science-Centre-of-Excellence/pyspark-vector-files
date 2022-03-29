@@ -316,7 +316,7 @@ def _generate_parallel_reader_for_files(
     coerce_to_schema: bool,
     schema: StructType,
     spark_to_pandas_type_map: MappingProxyType,
-) -> Callable:
+) -> Callable[[PandasDataFrame], PandasDataFrame]:
     """Adds arbitrary key word arguments to the wrapped function."""
 
     def _(pdf: PandasDataFrame) -> PandasDataFrame:
@@ -338,7 +338,7 @@ def _generate_parallel_reader_for_chunks(
     coerce_to_schema: bool,
     schema: StructType,
     spark_to_pandas_type_map: MappingProxyType,
-) -> Callable:
+) -> Callable[[PandasDataFrame], PandasDataFrame]:
     """Adds arbitrary key word arguments to the wrapped function."""
 
     def _(pdf: PandasDataFrame) -> PandasDataFrame:
