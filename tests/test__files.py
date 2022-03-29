@@ -29,19 +29,40 @@ from pyspark_vector_files._files import (
 from pyspark_vector_files._types import Chunks
 
 
+@pytest.mark.parametrize(
+    argnames=[
+        "pattern",
+        "expected_paths",
+    ],
+    argvalues=[
+        ("*", "all_fileGDB_paths"),
+        ("first*", "first_fileGDB_path"),
+    ],
+    ids=[
+        "Star",
+        "First star",
+    ],
+)
 def test__get_paths(
     fileGDB_directory_path: Path,
-    first_fileGDB_path: str,
-    second_fileGDB_path: str,
+    pattern: str,
+    expected_paths: str,
+    request: FixtureRequest,
 ) -> None:
     """Returns collection of FileGDB file paths."""
     paths = _get_paths(
         path=str(fileGDB_directory_path),
-        pattern="*",
+        pattern=pattern,
         suffix="gdb",
         recursive=False,
     )
-    assert paths == (first_fileGDB_path, second_fileGDB_path)
+
+    _expected_paths = request.getfixturevalue(expected_paths)
+
+    if isinstance(_expected_paths, str):
+        assert paths == (_expected_paths,)
+    else:
+        assert paths == _expected_paths
 
 
 @pytest.mark.parametrize(
@@ -91,7 +112,7 @@ def test__get_data_source_layer_names(first_fileGDB_path: str) -> None:
     layer_names = _get_data_source_layer_names(
         data_source=data_source,
     )
-    assert layer_names == ("second", "first")
+    assert sorted(layer_names) == ["first", "second", "third"]
 
 
 @pytest.mark.parametrize(
@@ -102,9 +123,9 @@ def test__get_data_source_layer_names(first_fileGDB_path: str) -> None:
     ],
     argvalues=[
         ("first", "first", does_not_raise()),
-        ("third", None, raises(ValueError)),
+        ("fourth", None, raises(ValueError)),
         (0, "second", does_not_raise()),
-        (2, None, raises(ValueError)),
+        (3, None, raises(ValueError)),
         (None, "second", does_not_raise()),
     ],
     ids=[
@@ -139,9 +160,9 @@ def test__get_layer_name(
     ],
     argvalues=[
         ("first", "first", does_not_raise()),
-        ("third", None, raises(ValueError)),
+        ("fourth", None, raises(ValueError)),
         (0, "second", does_not_raise()),
-        (2, None, raises(ValueError)),
+        (3, None, raises(ValueError)),
         (None, "second", does_not_raise()),
     ],
     ids=[
