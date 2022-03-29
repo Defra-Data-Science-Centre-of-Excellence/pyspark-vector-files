@@ -608,45 +608,32 @@ def expected_gdb_gdf(
 
 
 @fixture
-def expected_parallel_reader_for_files() -> Tuple[List[str], int]:
-    """Expected source code for _generate_parallel_reader_for_files."""
-    return (
-        [
-            "    def _(pdf: PandasDataFrame) -> PandasDataFrame:\n",
-            '        """Returns a pandas_udf compatible version of _pdf_from_vector_file."""\n',  # noqa: B950
-            "        return _pdf_from_vector_file(\n",
-            '            path=str(pdf["path"][0]),\n',
-            "            layer_identifier=layer_identifier,\n",
-            "            geom_field_name=geom_field_name,\n",
-            "            coerce_to_schema=coerce_to_schema,\n",
-            "            schema=schema,\n",
-            "            spark_to_pandas_type_map=spark_to_pandas_type_map,\n",
-            "        )\n",
-        ],
-        318,
-    )
+def expected_parallel_reader_for_files_closures(
+    fileGDB_schema: StructType,
+    spark_to_pandas_mapping: MappingProxyType,
+) -> List:
+    """Expected closures for for test__generate_parallel_reader_for_files."""
+    return [
+        True,
+        "geometry",
+        "first",
+        fileGDB_schema,
+        spark_to_pandas_mapping,
+    ]
 
 
 @fixture
-def expected_parallel_reader_for_chunks() -> Tuple[List[str], int]:
-    """Expected source code for _generate_parallel_reader_for_chunks."""
-    return (
-        [
-            "    def _(pdf: PandasDataFrame) -> PandasDataFrame:\n",
-            '        """Returns a pandas_udf compatible version of _pdf_from_vector_file_chunk."""\n',  # noqa: B950
-            "        return _pdf_from_vector_file_chunk(\n",
-            '            path=str(pdf["path"][0]),\n',
-            '            layer_name=str(pdf["layer_name"][0]),\n',
-            '            start=int(pdf["start"][0]),\n',
-            '            stop=int(pdf["stop"][0]),\n',
-            "            geom_field_name=geom_field_name,\n",
-            "            coerce_to_schema=coerce_to_schema,\n",
-            "            schema=schema,\n",
-            "            spark_to_pandas_type_map=spark_to_pandas_type_map,\n",
-            "        )\n",
-        ],
-        340,
-    )
+def expected_parallel_reader_for_chunks_closures(
+    fileGDB_schema: StructType,
+    spark_to_pandas_mapping: MappingProxyType,
+) -> List:
+    """Expected closures for for test__generate_parallel_reader_for_chunks."""
+    return [
+        True,
+        "geometry",
+        fileGDB_schema,
+        spark_to_pandas_mapping,
+    ]
 
 
 @fixture
