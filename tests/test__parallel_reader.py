@@ -1,5 +1,4 @@
 """Tests for _pyspark module."""
-from inspect import getsourcelines
 from types import MappingProxyType
 from typing import List, Optional, Tuple
 
@@ -414,7 +413,7 @@ def test__pdf_from_vector_file_chunk(
 def test__generate_parallel_reader_for_files(
     fileGDB_schema: StructType,
     spark_to_pandas_mapping: MappingProxyType,
-    expected_parallel_reader_for_files: Tuple[List[str], int],
+    expected_parallel_reader_for_files_closures: List,
 ) -> None:
     """Returns the expected source code."""
     parallel_reader = _generate_parallel_reader_for_files(
@@ -425,13 +424,15 @@ def test__generate_parallel_reader_for_files(
         spark_to_pandas_type_map=spark_to_pandas_mapping,
     )
 
-    assert getsourcelines(parallel_reader) == expected_parallel_reader_for_files
+    assert [
+        item.cell_contents for item in parallel_reader.__closure__
+    ] == expected_parallel_reader_for_files_closures
 
 
 def test__generate_parallel_reader_for_chunks(
     fileGDB_schema: StructType,
     spark_to_pandas_mapping: MappingProxyType,
-    expected_parallel_reader_for_chunks: Tuple[List[str], int],
+    expected_parallel_reader_for_chunks_closures: List,
 ) -> None:
     """Returns the expected source code."""
     parallel_reader = _generate_parallel_reader_for_chunks(
@@ -441,4 +442,6 @@ def test__generate_parallel_reader_for_chunks(
         spark_to_pandas_type_map=spark_to_pandas_mapping,
     )
 
-    assert getsourcelines(parallel_reader) == expected_parallel_reader_for_chunks
+    assert [
+        item.cell_contents for item in parallel_reader.__closure__
+    ] == expected_parallel_reader_for_chunks_closures
