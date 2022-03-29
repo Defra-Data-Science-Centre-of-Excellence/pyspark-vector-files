@@ -246,7 +246,7 @@ def erroneous_file_path() -> str:
     return "/erroneous/file/path"
 
 
-@fixture
+@fixture(autouse=True)
 def first_fileGDB_path(
     fileGDB_directory_path: Path,
     first_file_first_layer_gdf: GeoDataFrame,
@@ -280,7 +280,7 @@ def first_fileGDB_path(
     return path_as_string
 
 
-@fixture
+@fixture(autouse=True)
 def second_fileGDB_path(
     fileGDB_directory_path: Path,
     second_file_first_layer_gdf: GeoDataFrame,
@@ -304,6 +304,15 @@ def second_fileGDB_path(
     )
 
     return path_as_string
+
+
+@fixture
+def all_fileGDB_paths(
+    first_fileGDB_path: str,
+    second_fileGDB_path: str,
+) -> Tuple[str, ...]:
+    """All FileGDB paths."""
+    return (first_fileGDB_path, second_fileGDB_path)
 
 
 @fixture
