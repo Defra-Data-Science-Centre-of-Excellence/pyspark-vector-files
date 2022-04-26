@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>API Reference &#8212; PySpark Vector Files alpha documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Usage" href="usage.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-pyspark_vector_files">
+<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-pyspark_vector_files" title="Permalink to this headline">¶</a></h1>
+<p>Read various spatial vector formats into a Spark DataFrame.</p>
+<section id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>Read the first layer from a file or files into a single Spark DataFrame:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+<span class="go">    path=&quot;/path/to/files/&quot;,</span>
+<span class="go">    suffix=&quot;.ext&quot;,</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+</section>
+<section id="filename-pattern-matching">
+<h2>Filename pattern matching<a class="headerlink" href="#filename-pattern-matching" title="Permalink to this headline">¶</a></h2>
+<p>Read files that begin with “abc” into a single Spark DataFrame:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+<span class="go">    path=&quot;/path/to/files/&quot;,</span>
+<span class="go">    pattern=&quot;abc*&quot;,</span>
+<span class="go">    suffix=&quot;.ext&quot;,</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<p>Read files that end with four digits into a single Spark DataFrame:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+<span class="go">    path=&quot;/path/to/files/&quot;,</span>
+<span class="go">    pattern=&quot;*[0-9][0-9][0-9][0-9]&quot;,</span>
+<span class="go">    suffix=&quot;.ext&quot;,</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<p>For more information on pattern matching using Unix shell-style wildcards, see
+Python’s <a class="reference external" href="https://docs.python.org/3/library/fnmatch.html#module-fnmatch">fnmatch</a> module.</p>
+</section>
+<section id="reading-files-from-nested-folders">
+<h2>Reading files from nested folders<a class="headerlink" href="#reading-files-from-nested-folders" title="Permalink to this headline">¶</a></h2>
+<p>By default, the library will only look within the specified folder. To enable
+recursive searching of subdirectories, use the <cite>recursive</cite> argument.</p>
+<p class="rubric">Example</p>
+<p>Given the following folder structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">files</span>
+<span class="o">|</span>    <span class="n">file_0</span><span class="o">.</span><span class="n">ext</span>
+<span class="o">|</span>    <span class="n">file_1</span><span class="o">.</span><span class="n">ext</span>
+<span class="o">|</span>
+<span class="o">|--</span> <span class="n">subfolder</span>
+<span class="o">|</span>        <span class="n">file_2</span><span class="o">.</span><span class="n">ext</span>
+<span class="o">|</span>        <span class="n">file_3</span><span class="o">.</span><span class="n">ext</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+<span class="go">    path=&quot;/path/to/files/&quot;,</span>
+<span class="go">    suffix=&quot;.ext&quot;,</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<p>will read <cite>file_0.ext</cite> and <cite>file_1.ext</cite>, while</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+<span class="go">    path=&quot;/path/to/files/&quot;,</span>
+<span class="go">    suffix=&quot;.ext&quot;,</span>
+<span class="go">    recursive=True,</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<p>will read <cite>file_0.ext</cite>, <cite>file_1.ext</cite>, <cite>subfolder/file_2.ext</cite>, and
+<cite>subfolder/file_3.ext</cite>.</p>
+</section>
+<section id="reading-layers">
+<h2>Reading layers<a class="headerlink" href="#reading-layers" title="Permalink to this headline">¶</a></h2>
+<p>Read a specific layer for a file or files, using layer name:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+<span class="go">    path=&quot;/path/to/files/&quot;,</span>
+<span class="go">    suffix=&quot;.ext&quot;,</span>
+<span class="go">    layer_identifier=&quot;layer_name&quot;</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<p>or layer index:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+<span class="go">    path=&quot;/path/to/files/&quot;,</span>
+<span class="go">    suffix=&quot;.ext&quot;,</span>
+<span class="go">    layer_identifier=1</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+</section>
+<section id="gdal-virtual-file-systems">
+<h2>GDAL Virtual File Systems<a class="headerlink" href="#gdal-virtual-file-systems" title="Permalink to this headline">¶</a></h2>
+<p>Read compressed files using GDAL Virtual File Systems:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+<span class="go">    path=&quot;/path/to/files/&quot;,</span>
+<span class="go">    suffix=&quot;.gz&quot;,</span>
+<span class="go">    layer_identifier=&quot;layer_name&quot;,</span>
+<span class="go">    vsi_prefix=&quot;/vsigzip/&quot;,</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<p>For more information, see <a class="reference internal" href="#gdal-virtual-file-systems">GDAL Virtual File Systems</a>.</p>
+</section>
+<section id="user-defined-schema">
+<h2>User-defined Schema<a class="headerlink" href="#user-defined-schema" title="Permalink to this headline">¶</a></h2>
+<p>By default, a schema will be generated from the first file in the folder. For a
+single tabular dataset that has been partitioned across several files, this will
+work fine.</p>
+<p>However, it won’t work for a list format like GML, as not every file will contain
+the same fields. In this case, you can define a schema yourself. You will also need
+to set the coerce_to_schema flag to True.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">(</span>
+<span class="go">    [</span>
+<span class="go">        StructField(&quot;id&quot;, LongType()),</span>
+<span class="go">        StructField(&quot;category&quot;, StringType()),</span>
+<span class="go">        StructField(&quot;geometry&quot;, BinaryType()),</span>
+<span class="go">    ]</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+<span class="go">    path=&quot;/path/to/files/&quot;,</span>
+<span class="go">    suffix=&quot;.ext&quot;,</span>
+<span class="go">    layer_identifier=&quot;layer_name&quot;,</span>
+<span class="go">    schema=schema,</span>
+<span class="go">    coerce_to_schema=True,</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+</section>
+<section id="concurrency-strategy">
+<h2>Concurrency Strategy<a class="headerlink" href="#concurrency-strategy" title="Permalink to this headline">¶</a></h2>
+<p>By default, the function will parallelise across files.</p>
+<p>This should work well for single dataset that has been partitioned across several
+files. Especially if it has been partition so that those individual files can be
+comfortably read into memory on a single machine.</p>
+<p>However, the function also provides a way of parallelising across chunks of rows
+within a file or files.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+<span class="go">    path=&quot;/path/to/files/&quot;,</span>
+<span class="go">    suffix=&quot;.ext&quot;,</span>
+<span class="go">    concurrency_strategy=&quot;rows&quot;,</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<p>By default, a chunk will consist of 1 million rows but you cab change this using the
+ideal_chunk_size parameter.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+<span class="go">    path=&quot;/path/to/files/&quot;,</span>
+<span class="go">    suffix=&quot;.ext&quot;,</span>
+<span class="go">    concurrency_strategy=&quot;rows&quot;,</span>
+<span class="go">    ideal_chunk_size=5_000_000,</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Reading chunks adds a substantial overhead as files have to be opened to get a row
+count. The “rows” strategy should only be used for a single large file or a small
+number of large files.</p>
+</div>
+<p>..`GDAL Virtual File Systems`_: <a class="reference external" href="https://gdal.org/user/virtual_file_systems.html">https://gdal.org/user/virtual_file_systems.html</a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyspark_vector_files.read_vector_files">
+<span class="sig-prename descclassname"><span class="pre">pyspark_vector_files.</span></span><span class="sig-name descname"><span class="pre">read_vector_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ogr_to_spark_type_map:</span> <span class="pre">mappingproxy</span> <span class="pre">=</span> <span class="pre">mappingproxy({'Binary':</span> <span class="pre">BinaryType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'Date':</span> <span class="pre">StringType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'DateTime':</span> <span class="pre">StringType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'Integer':</span> <span class="pre">IntegerType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'IntegerList':</span> <span class="pre">ArrayType(IntegerType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'Integer64':</span> <span class="pre">LongType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'Integer64List':</span> <span class="pre">ArrayType(LongType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'Real':</span> <span class="pre">FloatType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'RealList':</span> <span class="pre">ArrayType(FloatType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'String':</span> <span class="pre">StringType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'StringList':</span> <span class="pre">ArrayType(StringType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'Time':</span> <span class="pre">StringType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'WideString':</span> <span class="pre">StringType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'WideStringList':</span> <span class="pre">ArrayType(StringType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true)})</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'*'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'*'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ideal_chunk_size:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom_field_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'geometry'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom_field_type:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'Binary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coerce_to_schema:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spark_to_pandas_type_map:</span> <span class="pre">mappingproxy</span> <span class="pre">=</span> <span class="pre">mappingproxy({ArrayType(FloatType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true):</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.object_'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ArrayType(IntegerType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true):</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.object_'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ArrayType(LongType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true):</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.object_'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ArrayType(StringType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true):</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.object_'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BinaryType:</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.object_'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FloatType:</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.float32'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">IntegerType:</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.int32'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LongType:</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.int64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">StringType:</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.object_'&gt;})</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concurrency_strategy:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'files'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vsi_prefix:</span> <span class="pre">typing.Optional[str]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema:</span> <span class="pre">typing.Optional[pyspark.sql.types.StructType]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_identifier:</span> <span class="pre">typing.Optional[typing.Union[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pyspark.sql.dataframe.DataFrame</span></span></span><a class="headerlink" href="#pyspark_vector_files.read_vector_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read vector file(s) into a Spark DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to a folder of vector files.</p></li>
+<li><p><strong>ogr_to_spark_type_map</strong> (<em>MappingProxyType</em>) – A mapping of OGR to Spark data
+types. Defaults to OGR_TO_SPARK.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – A filename pattern. This will be passed to to <cite>pathlib</cite>’s
+<cite>Path.glob</cite> method. For more information, see
+<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob">https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob</a>.
+Defaults to “*”.</p></li>
+<li><p><strong>suffix</strong> (<em>str</em>) – A file extention pattern. This will be passed to to <cite>pathlib</cite>’s
+<cite>Path.glob</cite> method. For more information, see
+<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob">https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob</a>.
+Defaults to “*”.</p></li>
+<li><p><strong>recursive</strong> (<em>bool</em>) – If True, recursive globbing in enabled. For more
+information, see
+<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.rglob">https://docs.python.org/3/library/pathlib.html#pathlib.Path.rglob</a>.
+Defaults to False.</p></li>
+<li><p><strong>ideal_chunk_size</strong> (<em>int</em>) – The max number of rows to be read into a chunk.
+Defaults to 1_000_000.</p></li>
+<li><p><strong>geom_field_name</strong> (<em>str</em>) – The name of the geometry column. Defaults to
+“geometry”.</p></li>
+<li><p><strong>geom_field_type</strong> (<em>str</em>) – The data type of the geometry column when it is
+passed to Spark. Defaults to “Binary”.</p></li>
+<li><p><strong>coerce_to_schema</strong> (<em>bool</em>) – If True, all files or chunks will be forced to
+fit the supplied schema. Missing columns will be added and additional
+columns will be removed. Defaults to False.</p></li>
+<li><p><strong>spark_to_pandas_type_map</strong> (<em>MappingProxyType</em>) – A mapping of Spark to Pandas data
+types. Defaults to SPARK_TO_PANDAS.</p></li>
+<li><p><strong>concurrency_strategy</strong> (<em>str</em>) – The concurrency strategy to use, can be “files”
+or “chunks”. Defaults to “files”.</p></li>
+<li><p><strong>vsi_prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – The GDAL virtual file system prefix(es) to use.
+For more information, see <a class="reference external" href="https://gdal.org/user/virtual_file_systems.html">https://gdal.org/user/virtual_file_systems.html</a>.
+Defaults to None.</p></li>
+<li><p><strong>schema</strong> (<em>StructType</em><em>, </em><em>optional</em>) – A user-defined Spark schema. Defaults to None.</p></li>
+<li><p><strong>layer_identifier</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>, </em><em>optional</em>) – A layer name or index. If
+None is given, the first layer will be return. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SparkDataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyspark_vector_files.temporary_spark_context">
+<span class="sig-prename descclassname"><span class="pre">pyspark_vector_files.</span></span><span class="sig-name descname"><span class="pre">temporary_spark_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_configuration_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pyspark.sql.session.SparkSession</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">pyspark.sql.session.SparkSession</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyspark_vector_files.temporary_spark_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes then resets spark configuration.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PySpark Vector Files</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filename-pattern-matching">Filename pattern matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-files-from-nested-folders">Reading files from nested folders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-layers">Reading layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gdal-virtual-file-systems">GDAL Virtual File Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#user-defined-schema">User-defined Schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#concurrency-strategy">Concurrency Strategy</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="usage.html" title="previous chapter">Usage</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Ed Fawcett-Taylor, Dan Lewis.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
