@@ -1,4 +1,8 @@
 """Nox sessions."""
+from os import environ
+from pathlib import Path
+from shutil import copytree, rmtree
+
 import nox
 from nox_poetry import Session, session
 
@@ -95,9 +99,27 @@ def tests(session: Session) -> None:
 #     session.run("codecov", *session.posargs)
 
 
-# @nox.session(python="3.8")
-# def docs(session: Session) -> None:
-#     """Build the documentation."""
-#     session.run("poetry", "install", "--no-dev", external=True)
-#     install_with_constraints(session, "sphinx")
-#     session.run("sphinx-build", "docs/source", "docs/_build")
+@session(name="docs-build", python="3.8")
+def docs_build(session: Session) -> None:
+    """Build the documentation."""
+    args = session.posargs or ["-M", "html", "source", "_build"]
+    if not session.posargs and "FORCE_COLOR" in environ:
+        args.insert(0, "--color")
+
+    session.install(".")
+    session.install("sphinx")
+
+    build_dir = Path("_build")
+    html_dir = Path("_build/html")
+    output_dir = Path("docs")
+    no_jekyll = output_dir / ".nojekyll"
+
+    session.run("sphinx-build", *args)
+
+    if output_dir.exists():
+        rmtree(output_dir)
+
+    copytree(html_dir, output_dir)
+    no_jekyll.touch()
+
+    rmtree(build_dir)
