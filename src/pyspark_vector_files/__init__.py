@@ -11,6 +11,64 @@ Example:
         suffix=".ext",
     )
 
+Filename pattern matching
+=========================
+
+Read files that begin with "abc" into a single Spark DataFrame:
+
+Example:
+    >>> sdf = read_vector_files(
+        path="/path/to/files/",
+        pattern="abc*",
+        suffix=".ext",
+    )
+
+Read files that end with four digits into a single Spark DataFrame:
+
+Example:
+    >>> sdf = read_vector_files(
+        path="/path/to/files/",
+        pattern="*[0-9][0-9][0-9][0-9]",
+        suffix=".ext",
+    )
+
+For more information on pattern matching using Unix shell-style wildcards, see
+Python's `fnmatch`_ module.
+
+Reading files from nested folders
+=================================
+
+By default, the library will only look within the specified folder. To enable
+recursive searching of subdirectories, use the `recursive` argument.
+
+Example:
+    Given the following folder structure::
+
+        /path/to/files
+        |    file_0.ext
+        |    file_1.ext
+        |
+        |-- subfolder
+        |        file_2.ext
+        |        file_3.ext
+
+    >>> sdf = read_vector_files(
+        path="/path/to/files/",
+        suffix=".ext",
+    )
+
+    will read `file_0.ext` and `file_1.ext`, while
+
+    >>> sdf = read_vector_files(
+        path="/path/to/files/",
+        suffix=".ext",
+        recursive=True,
+    )
+
+    will read `file_0.ext`, `file_1.ext`, `subfolder/file_2.ext`, and
+    `subfolder/file_3.ext`.
+
+
 Reading layers
 ==============
 
@@ -44,6 +102,8 @@ Example:
         layer_identifier="layer_name",
         vsi_prefix="/vsigzip/",
     )
+
+For more information, see `GDAL Virtual File Systems`_.
 
 User-defined Schema
 ===================
@@ -92,7 +152,7 @@ Example:
         concurrency_strategy="rows",
     )
 
-By default, a chunk will consist of 3 million rows but you cab change this using the
+By default, a chunk will consist of 1 million rows but you cab change this using the
 ideal_chunk_size parameter.
 
 Example:
@@ -107,6 +167,10 @@ Example:
     Reading chunks adds a substantial overhead as files have to be opened to get a row
     count. The "rows" strategy should only be used for a single large file or a small
     number of large files.
+
+.. _`fnmatch`: https://docs.python.org/3/library/fnmatch.html#module-fnmatch
+
+..`GDAL Virtual File Systems`_: https://gdal.org/user/virtual_file_systems.html
 
 """
 from contextlib import contextmanager
@@ -209,35 +273,53 @@ def read_vector_files(
     pattern: str = "*",
     suffix: str = "*",
     recursive: bool = False,
-    ideal_chunk_size: int = 3_000_000,
+    ideal_chunk_size: int = 1_000_000,
     geom_field_name: str = "geometry",
     geom_field_type: str = "Binary",
     coerce_to_schema: bool = False,
     spark_to_pandas_type_map: MappingProxyType = SPARK_TO_PANDAS,
-    vsi_prefix: Optional[str] = None,
-    schema: StructType = None,
-    layer_identifier: Optional[Union[str, int]] = None,
     concurrency_strategy: str = "files",
+    vsi_prefix: Optional[str] = None,
+    schema: Optional[StructType] = None,
+    layer_identifier: Optional[Union[str, int]] = None,
 ) -> SparkDataFrame:
     """Read vector file(s) into a Spark DataFrame.
 
     Args:
-        path (str): [description]
-        ogr_to_spark_type_map (MappingProxyType): [description]. Defaults
-            to OGR_TO_SPARK.
-        pattern (str): [description]. defaults to "*".
-        suffix (str): [description]. Defaults to "*".
-        recursive (bool): [description]. Defaults to False.
-        ideal_chunk_size (int): [description]. Defaults to 3_000_000.
-        geom_field_name (str): [description]. Defaults to "geometry".
-        geom_field_type (str): [description]. Defaults to "Binary".
-        coerce_to_schema (bool): [description]. Defaults to False.
-        spark_to_pandas_type_map (MappingProxyType): [description]. Defaults
-            to SPARK_TO_PANDAS.
-        vsi_prefix (str, optional): [description]. Defaults to None.
-        schema (StructType): [description]. Defaults to None.
-        layer_identifier (str, optional): [description]. Defaults to None.
-        concurrency_strategy (str): [description]. Defaults to "files".
+        path (str): Path to a folder of vector files.
+        ogr_to_spark_type_map (MappingProxyType): A mapping of OGR to Spark data
+            types. Defaults to OGR_TO_SPARK.
+        pattern (str): A filename pattern. This will be passed to to `pathlib`'s
+            `Path.glob` method. For more information, see
+            https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob.
+            Defaults to "*".
+        suffix (str): A file extention pattern. This will be passed to to `pathlib`'s
+            `Path.glob` method. For more information, see
+            https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob.
+            Defaults to "*".
+        recursive (bool): If True, recursive globbing in enabled. For more
+            information, see
+            https://docs.python.org/3/library/pathlib.html#pathlib.Path.rglob.
+            Defaults to False.
+        ideal_chunk_size (int): The max number of rows to be read into a chunk.
+            Defaults to 1_000_000.
+        geom_field_name (str): The name of the geometry column. Defaults to
+            "geometry".
+        geom_field_type (str): The data type of the geometry column when it is
+            passed to Spark. Defaults to "Binary".
+        coerce_to_schema (bool): If True, all files or chunks will be forced to
+            fit the supplied schema. Missing columns will be added and additional
+            columns will be removed. Defaults to False.
+        spark_to_pandas_type_map (MappingProxyType): A mapping of Spark to Pandas data
+            types. Defaults to SPARK_TO_PANDAS.
+        concurrency_strategy (str): The concurrency strategy to use, can be "files"
+            or "chunks". Defaults to "files".
+        vsi_prefix (str, optional): The GDAL virtual file system prefix(es) to use.
+            For more information, see https://gdal.org/user/virtual_file_systems.html.
+            Defaults to None.
+        schema (StructType, optional): A user-defined Spark schema. Defaults to None.
+        layer_identifier (Union[str, int], optional): A layer name or index. If
+            None is given, the first layer will be return. Defaults to None.
 
     Returns:
         SparkDataFrame: [description]
