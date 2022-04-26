@@ -170,7 +170,7 @@ Example:
 
 .. _`fnmatch`: https://docs.python.org/3/library/fnmatch.html#module-fnmatch
 
-..`GDAL Virtual File Systems`_: https://gdal.org/user/virtual_file_systems.html
+.. _`GDAL Virtual File Systems`: https://gdal.org/user/virtual_file_systems.html
 
 """
 from contextlib import contextmanager
