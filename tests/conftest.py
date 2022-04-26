@@ -177,6 +177,21 @@ def first_file_second_layer_pdf(
 
 
 @fixture
+def first_file_third_layer_gdf(
+    layer_column_names: Tuple[str, ...],
+) -> GeoDataFrame:
+    """Second dummy layer."""
+    return GeoDataFrame(
+        data=(
+            (8, "H", None),
+            (9, "I", None),
+        ),
+        columns=layer_column_names,
+        crs="EPSG:27700",
+    )
+
+
+@fixture
 def second_file_first_layer_gdf(
     layer_column_names: Tuple[str, ...],
 ) -> GeoDataFrame:
@@ -231,11 +246,12 @@ def erroneous_file_path() -> str:
     return "/erroneous/file/path"
 
 
-@fixture
+@fixture(autouse=True)
 def first_fileGDB_path(
     fileGDB_directory_path: Path,
     first_file_first_layer_gdf: GeoDataFrame,
     first_file_second_layer_gdf: GeoDataFrame,
+    first_file_third_layer_gdf: GeoDataFrame,
 ) -> str:
     """Writes dummy layers to FileGDB and returns path as string."""
     path = fileGDB_directory_path / "first.gdb"
@@ -254,10 +270,17 @@ def first_fileGDB_path(
         layer="second",
     )
 
+    first_file_third_layer_gdf.to_file(
+        filename=path_as_string,
+        index=False,
+        layer="third",
+        ignore_fields=["geometry"],
+    )
+
     return path_as_string
 
 
-@fixture
+@fixture(autouse=True)
 def second_fileGDB_path(
     fileGDB_directory_path: Path,
     second_file_first_layer_gdf: GeoDataFrame,
@@ -281,6 +304,15 @@ def second_fileGDB_path(
     )
 
     return path_as_string
+
+
+@fixture
+def all_fileGDB_paths(
+    first_fileGDB_path: str,
+    second_fileGDB_path: str,
+) -> Tuple[str, ...]:
+    """All FileGDB paths."""
+    return (first_fileGDB_path, second_fileGDB_path)
 
 
 @fixture
@@ -585,45 +617,32 @@ def expected_gdb_gdf(
 
 
 @fixture
-def expected_parallel_reader_for_files() -> Tuple[List[str], int]:
-    """Expected source code for _generate_parallel_reader_for_files."""
-    return (
-        [
-            "    def _(pdf: PandasDataFrame) -> PandasDataFrame:\n",
-            '        """Returns a pandas_udf compatible version of _pdf_from_vector_file."""\n',  # noqa: B950
-            "        return _pdf_from_vector_file(\n",
-            '            path=str(pdf["path"][0]),\n',
-            "            layer_identifier=layer_identifier,\n",
-            "            geom_field_name=geom_field_name,\n",
-            "            coerce_to_schema=coerce_to_schema,\n",
-            "            schema=schema,\n",
-            "            spark_to_pandas_type_map=spark_to_pandas_type_map,\n",
-            "        )\n",
-        ],
-        318,
-    )
+def expected_parallel_reader_for_files_closures(
+    fileGDB_schema: StructType,
+    spark_to_pandas_mapping: MappingProxyType,
+) -> List:
+    """Expected closures for for test__generate_parallel_reader_for_files."""
+    return [
+        True,
+        "geometry",
+        "first",
+        fileGDB_schema,
+        spark_to_pandas_mapping,
+    ]
 
 
 @fixture
-def expected_parallel_reader_for_chunks() -> Tuple[List[str], int]:
-    """Expected source code for _generate_parallel_reader_for_chunks."""
-    return (
-        [
-            "    def _(pdf: PandasDataFrame) -> PandasDataFrame:\n",
-            '        """Returns a pandas_udf compatible version of _pdf_from_vector_file_chunk."""\n',  # noqa: B950
-            "        return _pdf_from_vector_file_chunk(\n",
-            '            path=str(pdf["path"][0]),\n',
-            '            layer_name=str(pdf["layer_name"][0]),\n',
-            '            start=int(pdf["start"][0]),\n',
-            '            stop=int(pdf["stop"][0]),\n',
-            "            geom_field_name=geom_field_name,\n",
-            "            coerce_to_schema=coerce_to_schema,\n",
-            "            schema=schema,\n",
-            "            spark_to_pandas_type_map=spark_to_pandas_type_map,\n",
-            "        )\n",
-        ],
-        340,
-    )
+def expected_parallel_reader_for_chunks_closures(
+    fileGDB_schema: StructType,
+    spark_to_pandas_mapping: MappingProxyType,
+) -> List:
+    """Expected closures for for test__generate_parallel_reader_for_chunks."""
+    return [
+        True,
+        "geometry",
+        fileGDB_schema,
+        spark_to_pandas_mapping,
+    ]
 
 
 @fixture

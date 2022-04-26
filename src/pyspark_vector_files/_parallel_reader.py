@@ -29,9 +29,13 @@ def _get_properties(feature: Feature) -> Tuple:
     return tuple(field for field in feature)
 
 
-def _get_geometry(feature: Feature) -> Tuple:
-    """Given a GDAL Feature, return the geometry fields."""
-    return (feature.GetGeometryRef().ExportToWkb(),)
+def _get_geometry(feature: Feature) -> Tuple[Optional[bytearray]]:
+    """Given a GDAL Feature, return the geometry field, if there is one."""
+    geometry = feature.GetGeometryRef()
+    if geometry:
+        return (geometry.ExportToWkb(),)
+    else:
+        return (None,)
 
 
 def _get_features(layer: Layer) -> Generator:
@@ -312,7 +316,7 @@ def _generate_parallel_reader_for_files(
     coerce_to_schema: bool,
     schema: StructType,
     spark_to_pandas_type_map: MappingProxyType,
-) -> Callable:
+) -> Callable[[PandasDataFrame], PandasDataFrame]:
     """Adds arbitrary key word arguments to the wrapped function."""
 
     def _(pdf: PandasDataFrame) -> PandasDataFrame:
@@ -334,7 +338,7 @@ def _generate_parallel_reader_for_chunks(
     coerce_to_schema: bool,
     schema: StructType,
     spark_to_pandas_type_map: MappingProxyType,
-) -> Callable:
+) -> Callable[[PandasDataFrame], PandasDataFrame]:
     """Adds arbitrary key word arguments to the wrapped function."""
 
     def _(pdf: PandasDataFrame) -> PandasDataFrame:
