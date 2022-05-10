@@ -12,7 +12,7 @@ documentation = "https://defra-data-science-centre-of-excellence.github.io/pyspa
 python = "^3.8"
 more-itertools = "^8.12.0"
 pandas = "1.2.4"
-pyspark = "3.1.2"
+pyspark = ">= 3.1.2, <= 3.2.1"
 GDAL = "3.4.0"
 
 [tool.poetry.dev-dependencies]
