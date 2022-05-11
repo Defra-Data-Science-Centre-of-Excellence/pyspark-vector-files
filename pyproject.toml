@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyspark_vector_files"
-version = "0.1.3"
+version = "0.1.4"
 description = "Read vector files into a Spark DataFrame with geometry encoded as WKB."
 authors = ["Ed Fawcett-Taylor <ed.fawcett-taylor@defra.gov.uk>"]
 license = "MIT"
@@ -9,10 +9,10 @@ repository = "https://github.com/Defra-Data-Science-Centre-of-Excellence/pyspark
 documentation = "https://defra-data-science-centre-of-excellence.github.io/pyspark-vector-files/"
 
 [tool.poetry.dependencies]
-python = ">= 3.8, < 3.9"
+python = "^3.8"
 more-itertools = "^8.12.0"
 pandas = "1.2.4"
-pyspark = "3.1.2"
+pyspark = ">= 3.1.2, <= 3.2.1"
 GDAL = "3.4.0"
 
 [tool.poetry.dev-dependencies]
