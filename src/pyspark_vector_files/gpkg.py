@@ -1,11 +1,11 @@
 """Functions for reading a GPKG using Spark's JDBC drivers."""
-
+from functools import partial
 from struct import unpack
 from typing import Any, Dict, List, Optional
 
 from pyspark.sql import DataFrame as SparkDataFrame
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import collect_list, expr, udf
+from pyspark.sql.functions import col, collect_list, expr, udf
 from pyspark.sql.types import (
     ArrayType,
     DoubleType,
@@ -29,6 +29,12 @@ def _read_gpkg(
         .option("dbtable", layer_name)
         .load()
     )
+
+
+_get_gpkg_contents = partial(
+    _read_gpkg,
+    layer_name="gpkg_contents",
+)
 
 
 return_schema = StructType(
@@ -79,18 +85,36 @@ def _split_geometry(
 
 def list_layers(
     filepath: str,
-    spark: SparkSession,
+    spark: Optional[SparkSession] = None,
 ) -> List[str]:
     """List layers."""
-    gpkg_contents = _read_gpkg(
+    _spark = spark if spark else SparkSession.getActiveSession()
+    gpkg_contents = _get_gpkg_contents(
         filepath=filepath,
-        layer_name="gpkg_contents",
-        spark=spark,
+        spark=_spark,
     )
     return gpkg_contents.select(collect_list("table_name")).first()[0]
 
 
-def read(
+def get_crs(
+    filepath: str,
+    layer_name: str,
+    spark: Optional[SparkSession] = None,
+) -> int:
+    """Get CRS of layer."""
+    _spark = spark if spark else SparkSession.getActiveSession()
+    gpkg_contents = _get_gpkg_contents(
+        filepath=filepath,
+        spark=_spark,
+    )
+    return (
+        gpkg_contents.filter(col("table_name") == layer_name)
+        .select("srs_id")
+        .first()[0]
+    )
+
+
+def read_gpkg(
     filepath: str,
     original_geometry_column_name: str = "geom",
     header_length: int = HEADER_LENGTH,
