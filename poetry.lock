@@ -457,7 +457,7 @@ flake8 = "*"
 
 [[package]]
 name = "gdal"
-version = "3.4.0"
+version = "3.4.3"
 description = "GDAL: Geospatial Data Abstraction Library"
 category = "main"
 optional = false
@@ -1538,7 +1538,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">= 3.8, < 3.9"
-content-hash = "3457005c7f38253cc32c97016d38375953ff45c6f1333fbe2416bb3752f1fcaf"
+content-hash = "d9591101b4efc2e2122d2e82cb3d5e17920f62666ff48f7d67ad6cb2071e879b"
 
 [metadata.files]
 alabaster = [
@@ -1822,9 +1822,7 @@ flake8-polyfill = [
     {file = "flake8-polyfill-1.0.2.tar.gz", hash = "sha256:e44b087597f6da52ec6393a709e7108b2905317d0c0b744cdca6208e670d8eda"},
     {file = "flake8_polyfill-1.0.2-py2.py3-none-any.whl", hash = "sha256:12be6a34ee3ab795b19ca73505e7b55826d5f6ad7230d31b18e106400169b9e9"},
 ]
-gdal = [
-    {file = "GDAL-3.4.0.tar.gz", hash = "sha256:05c92a0fd262a9600bc6f896485e7f5f575f354957847ceb9fed7c1c616c189e"},
-]
+gdal = []
 geopandas = [
     {file = "geopandas-0.10.2-py2.py3-none-any.whl", hash = "sha256:1722853464441b603d9be3d35baf8bde43831424a891e82a8545eb8997b65d6c"},
     {file = "geopandas-0.10.2.tar.gz", hash = "sha256:efbf47e70732e25c3727222019c92b39b2e0a66ebe4fe379fbe1aa43a2a871db"},
