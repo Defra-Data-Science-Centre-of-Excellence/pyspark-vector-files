@@ -4,7 +4,6 @@ from tarfile import open as open_tarfile
 from types import MappingProxyType
 from typing import List, Tuple
 
-from _pytest.tmpdir import TempPathFactory
 from geopandas import GeoDataFrame, GeoSeries
 from numpy import int64, object0
 from osgeo.ogr import DataSource, Open
@@ -27,6 +26,12 @@ from shapely.geometry.base import BaseGeometry
 
 from pyspark_vector_files import OGR_TO_SPARK, SPARK_TO_PANDAS
 from pyspark_vector_files._types import Chunks
+
+
+@fixture
+def shared_datadir() -> Path:
+    """Path to local `tests/data` folder."""
+    return Path(__file__).parent / "data"
 
 
 @fixture
@@ -90,11 +95,8 @@ def first_file_first_layer_pdf(
     first_file_first_layer_gdf: GeoDataFrame,
 ) -> PandasDataFrame:
     """First dummy layer as pdf with wkb geometry column."""
-    first_file_first_layer_gdf["geometry"] = first_file_first_layer_gdf[
-        "geometry"
-    ].to_wkb()
     return PandasDataFrame(
-        first_file_first_layer_gdf,
+        first_file_first_layer_gdf.to_wkb(),
     )
 
 
@@ -177,25 +179,10 @@ def first_file_second_layer_pdf(
 
 
 @fixture
-def first_file_third_layer_gdf(
-    layer_column_names: Tuple[str, ...],
-) -> GeoDataFrame:
-    """Second dummy layer."""
-    return GeoDataFrame(
-        data=(
-            (8, "H", None),
-            (9, "I", None),
-        ),
-        columns=layer_column_names,
-        crs="EPSG:27700",
-    )
-
-
-@fixture
 def second_file_first_layer_gdf(
     layer_column_names: Tuple[str, ...],
 ) -> GeoDataFrame:
-    """Second dummy layer."""
+    """First dummy layer."""
     return GeoDataFrame(
         data=(
             (4, "E", Point(1, 1)),
@@ -222,19 +209,34 @@ def second_file_second_layer_gdf(
 
 
 @fixture
-def directory_path(
-    tmp_path_factory: TempPathFactory,
-) -> Path:
-    """Pytest temporary directory as Path object."""
-    return tmp_path_factory.getbasetemp()
+def first_file_third_layer_gdf(
+    layer_column_names: Tuple[str, ...],
+) -> GeoDataFrame:
+    """Third dummy layer."""
+    return GeoDataFrame(
+        data=(
+            (8, "H", None),
+            (9, "I", None),
+        ),
+        columns=layer_column_names,
+        crs="EPSG:27700",
+    )
+
+
+# @fixture
+# def directory_path(
+#     tmp_path_factory: TempPathFactory,
+# ) -> Path:
+#     """Pytest temporary directory as Path object."""
+#     return tmp_path_factory.getbasetemp()
 
 
 @fixture
 def fileGDB_directory_path(
-    directory_path: Path,
+    shared_datadir: Path,
 ) -> Path:
     """Folder for FileGDB."""
-    fileGDB_directory_path = directory_path / "fileGDB"
+    fileGDB_directory_path = shared_datadir / "fileGDB"
     if not fileGDB_directory_path.is_dir():
         fileGDB_directory_path.mkdir()
     return fileGDB_directory_path
@@ -242,7 +244,7 @@ def fileGDB_directory_path(
 
 @fixture
 def erroneous_file_path() -> str:
-    """."""
+    """A file path that doesn't exist."""
     return "/erroneous/file/path"
 
 
@@ -256,28 +258,28 @@ def first_fileGDB_path(
     """Writes dummy layers to FileGDB and returns path as string."""
     path = fileGDB_directory_path / "first.gdb"
 
-    path_as_string = str(path)
+    if not path.exists():
 
-    first_file_first_layer_gdf.to_file(
-        filename=path_as_string,
-        index=False,
-        layer="first",
-    )
+        first_file_first_layer_gdf.to_file(
+            filename=path,
+            index=False,
+            layer="first",
+        )
 
-    first_file_second_layer_gdf.to_file(
-        filename=path_as_string,
-        index=False,
-        layer="second",
-    )
+        first_file_second_layer_gdf.to_file(
+            filename=path,
+            index=False,
+            layer="second",
+        )
 
-    first_file_third_layer_gdf.to_file(
-        filename=path_as_string,
-        index=False,
-        layer="third",
-        ignore_fields=["geometry"],
-    )
+        first_file_third_layer_gdf.to_file(
+            filename=path,
+            index=False,
+            layer="third",
+            ignore_fields=["geometry"],
+        )
 
-    return path_as_string
+    return str(path)
 
 
 @fixture(autouse=True)
@@ -289,21 +291,21 @@ def second_fileGDB_path(
     """Writes dummy layers to FileGDB."""
     path = fileGDB_directory_path / "second.gdb"
 
-    path_as_string = str(path)
+    if not path.exists():
 
-    second_file_first_layer_gdf.to_file(
-        filename=path_as_string,
-        index=False,
-        layer="first",
-    )
+        second_file_first_layer_gdf.to_file(
+            filename=path,
+            index=False,
+            layer="first",
+        )
 
-    second_file_second_layer_gdf.to_file(
-        filename=path_as_string,
-        index=False,
-        layer="second",
-    )
+        second_file_second_layer_gdf.to_file(
+            filename=path,
+            index=False,
+            layer="second",
+        )
 
-    return path_as_string
+    return str(path)
 
 
 @fixture
@@ -316,69 +318,71 @@ def all_fileGDB_paths(
 
 
 @fixture
-def shapefiles_path(
-    directory_path: Path,
+def shapefile_directory_path(
+    shared_datadir: Path,
     first_file_first_layer_gdf: GeoDataFrame,
     first_file_second_layer_gdf: GeoDataFrame,
 ) -> str:
-    """Writes dummy layers to FileGDB and returns path as string."""
-    first_path = directory_path / "first.shp"
+    """Writes dummy shapefiles to folder and returns path as string."""
+    shapefile_directory_path = shared_datadir / "shapefile"
+    if not shapefile_directory_path.is_dir():
+        shapefile_directory_path.mkdir()
 
-    first_path_as_string = str(first_path)
+    first_path = shapefile_directory_path / "first.shp"
+    if not first_path.exists():
+        first_file_first_layer_gdf.to_file(
+            filename=first_path,
+            index=False,
+            layer="first",
+        )
 
-    first_file_first_layer_gdf.to_file(
-        filename=first_path_as_string,
-        index=False,
-        layer="first",
-    )
+    second_path = shapefile_directory_path / "second.shp"
+    if not second_path.exists():
+        first_file_second_layer_gdf.to_file(
+            filename=second_path,
+            index=False,
+            layer="second",
+        )
 
-    second_path = directory_path / "second.shp"
-
-    second_path_as_string = str(second_path)
-
-    first_file_second_layer_gdf.to_file(
-        filename=second_path_as_string,
-        index=False,
-        layer="second",
-    )
-
-    return str(directory_path)
+    return str(shapefile_directory_path)
 
 
 @fixture
 def gzipped_shapefiles_path(
-    directory_path: Path,
+    shapefile_directory_path: str,
 ) -> str:
     """Writes dummy layers to FileGDB and returns path as string."""
-    first_tar_path = directory_path / "first.tar.gz"
+    _shapefile_directory_path = Path(shapefile_directory_path)
+
+    first_tar_path = _shapefile_directory_path / "first.tar.gz"
 
     if not first_tar_path.exists():
-        first_shapefile_parts = directory_path.glob("first.*")
+        first_shapefile_parts = _shapefile_directory_path.glob("first.*")
 
         with open_tarfile(first_tar_path, "x:gz") as tar:
             for file in first_shapefile_parts:
                 tar.add(file, arcname=file.name)
 
-    second_tar_path = directory_path / "second.tar.gz"
+    second_tar_path = _shapefile_directory_path / "second.tar.gz"
 
     if not second_tar_path.exists():
-        second_shapefile_parts = directory_path.glob("second.*")
+        second_shapefile_parts = _shapefile_directory_path.glob("second.*")
 
         with open_tarfile(second_tar_path, "x:gz") as tar:
             for file in second_shapefile_parts:
                 tar.add(file, arcname=file.name)
 
-    return str(directory_path)
+    return shapefile_directory_path
 
 
 @fixture
 def fileGDB_wrong_types_path(
-    directory_path: Path,
+    fileGDB_directory_path: Path,
     first_file_first_layer_pdf_with_wrong_types: PandasDataFrame,
     first_file_second_layer_gdf: GeoDataFrame,
 ) -> str:
     """Writes dummy layers to FileGDB and returns path as string."""
-    directory_path = directory_path / "wrong"
+    directory_path = fileGDB_directory_path / "wrong"
 
     if not directory_path.is_dir():
         directory_path.mkdir()
@@ -387,25 +391,27 @@ def fileGDB_wrong_types_path(
 
     path_as_string = str(path)
 
-    first_file_first_layer_gdf = GeoDataFrame(
-        data=first_file_first_layer_pdf_with_wrong_types,
-        geometry=GeoSeries.from_wkb(
-            first_file_first_layer_pdf_with_wrong_types["geometry"]
-        ),
-        crs="EPSG:27700",
-    )
+    if not path.exists():
 
-    first_file_first_layer_gdf.to_file(
-        filename=path_as_string,
-        index=False,
-        layer="first",
-    )
+        first_file_first_layer_gdf = GeoDataFrame(
+            data=first_file_first_layer_pdf_with_wrong_types,
+            geometry=GeoSeries.from_wkb(
+                first_file_first_layer_pdf_with_wrong_types["geometry"]
+            ),
+            crs="EPSG:27700",
+        )
 
-    first_file_second_layer_gdf.to_file(
-        filename=path_as_string,
-        index=False,
-        layer="second",
-    )
+        first_file_first_layer_gdf.to_file(
+            filename=path_as_string,
+            index=False,
+            layer="first",
+        )
+
+        first_file_second_layer_gdf.to_file(
+            filename=path_as_string,
+            index=False,
+            layer="second",
+        )
 
     return path_as_string
 
@@ -443,13 +449,15 @@ def fileGDB_schema_field_details() -> Tuple[Tuple[str, DataType], ...]:
 @fixture
 def ogr_to_spark_mapping() -> MappingProxyType:
     """OGR to Spark data type mapping."""
-    return OGR_TO_SPARK
+    ogr_to_spark: MappingProxyType = OGR_TO_SPARK
+    return ogr_to_spark
 
 
 @fixture
 def spark_to_pandas_mapping() -> MappingProxyType:
     """Spark to Pandas data type mapping."""
-    return SPARK_TO_PANDAS
+    spark_to_pandas: MappingProxyType = SPARK_TO_PANDAS
+    return spark_to_pandas
 
 
 @fixture

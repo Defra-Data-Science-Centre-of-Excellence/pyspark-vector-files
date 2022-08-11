@@ -65,7 +65,7 @@ def test_temporary_spark_context(
     ],
     argvalues=[
         (
-            "shapefiles_path",
+            "shapefile_directory_path",
             "*",
             ".shp",
             3_000_000,
@@ -125,7 +125,7 @@ def test_temporary_spark_context(
             "expected_gdb_gdf",
         ),
         (
-            "shapefiles_path",
+            "shapefile_directory_path",
             "*",
             ".shp",
             3_000_000,
