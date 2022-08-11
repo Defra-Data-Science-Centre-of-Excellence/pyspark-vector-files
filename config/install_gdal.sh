@@ -10,4 +10,4 @@ sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
 sudo apt-get update
 
 # The `libgdal-dev` version number must be the same as the Python GDAL bindings
-sudo apt-get install -y libgdal-dev=3.4.0+dfsg-1~focal0
+sudo apt-get install -y libgdal-dev=3.4.3+dfsg-1~focal0

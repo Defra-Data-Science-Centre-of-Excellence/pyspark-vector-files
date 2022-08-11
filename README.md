@@ -8,7 +8,7 @@ Full documentation is available [here](https://defra-data-science-centre-of-exce
 
 ## Requirements
 
-This library was developed using [Databricks Runtime 9.1 LTS](https://docs.databricks.com/release-notes/runtime/9.1.html) and uses the versions of `python`, `pandas` and `pyspark` that come pre-installed on that runtime. However, it also requires `GDAL 3.4.0`.
+This library was developed using [Databricks Runtime 10.4 LTS](https://docs.databricks.com/release-notes/runtime/10.4.html) and uses the versions of `python`, `pandas` and `pyspark` that come pre-installed on that runtime. However, it also requires `GDAL 3.4.3` as this is the most recent version of `GDAL` available from [ubuntugis-unstable](https://launchpad.net/~ubuntugis/+archive/ubuntu/ubuntugis-unstable) as of 2022-08-11.
 
 You can install `GDAL` on your cluster using an [init script](https://docs.microsoft.com/en-us/azure/databricks/clusters/init-scripts). See [here](config/install_gdal.sh) for an example.
 
@@ -43,25 +43,25 @@ More examples are available [here](https://defra-data-science-centre-of-excellen
 
 ## Local development
 
-To ensure compatibility with [Databricks Runtime 9.1 LTS](https://docs.databricks.com/release-notes/runtime/9.1.html), this package was developed on a Linux machine running the `Ubuntu 20.04 LTS` operating system using `Python 3.8.8`, `GDAL 3.4.0`, and `spark 3.1.2`.
+To ensure compatibility with [Databricks Runtime 10.4 LTS](https://docs.databricks.com/release-notes/runtime/10.4.html), this package was developed on a Linux machine running the `Ubuntu 20.04 LTS` operating system using `Python3.8.10`, `GDAL 3.4.3`, and `spark 3.2.1.`.
 
-### Install `Python 3.8.8` using [pyenv](https://github.com/pyenv/pyenv)
+### Install `Python 3.8.10` using [pyenv](https://github.com/pyenv/pyenv)
 
 See the `pyenv-installer`'s [Installation / Update / Uninstallation](https://github.com/pyenv/pyenv-installer#installation--update--uninstallation) instructions.
 
-Install Python 3.8.8 globally:
+Install Python 3.8.10 globally:
 
 ```sh
-pyenv install 3.8.8
+pyenv install 3.8.10
 ```
 
 Then install it locally in the repository you're using:
 
 ```sh
-pyenv local 3.8.8
+pyenv local 3.8.10
 ```
 
-### Install `GDAL 3.4.0`
+### Install `GDAL 3.4.3`
 
 Add the [UbuntuGIS unstable Private Package Archive (PPA)](https://launchpad.net/~ubuntugis/+archive/ubuntu/ubuntugis-unstable)
 and update your package list:
@@ -71,21 +71,21 @@ sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable \
     && sudo apt-get update
 ```
 
-Install `gdal 3.4.0`, I found I also had to install python3-gdal (even though
+Install `gdal 3.4.3`, I found I also had to install python3-gdal (even though
 I'm going to use poetry to install it in a virtual environment later) to
 avoid version conflicts:
 
 ```sh
-sudo apt-get install -y gdal-bin=3.4.0+dfsg-1~focal0 \
-    libgdal-dev=3.4.0+dfsg-1~focal0 \
-    python3-gdal=3.4.0+dfsg-1~focal0
+sudo apt-get install -y gdal-bin=3.4.3+dfsg-1~focal0 \
+    libgdal-dev=3.4.3+dfsg-1~focal0 \
+    python3-gdal=3.4.3+dfsg-1~focal0
 ```
 
 Verify the installation:
 
 ```sh
 ogrinfo --version
-# GDAL 3.4.0, released 2021/11/04
+# GDAL 3.4.3, released 2022/04/22
 ```
 
 ### Install `poetry 1.1.13`
