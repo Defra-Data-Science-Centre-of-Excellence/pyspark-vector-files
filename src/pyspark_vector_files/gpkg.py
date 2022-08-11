@@ -269,7 +269,10 @@ def list_layers(
         path=path,
         spark=_spark,
     )
-    return gpkg_contents.select(collect_list("table_name")).first()[0]
+    # ! Explicitly coerce `table_names` to `List[str]` to prevent `mypy`
+    # ! `[no-any-return]`
+    table_names: List[str] = gpkg_contents.select(collect_list("table_name")).first()[0]
+    return table_names
 
 
 def get_crs(
@@ -314,11 +317,13 @@ def get_crs(
         layer_name="gpkg_spatial_ref_sys",
         spark=_spark,
     )
-    return (
+    # ! Explicitly coerce `definition` to `str` to prevent `mypy` `[no-any-return]`
+    definition: str = (
         gpkg_spatial_ref_sys.filter(col("srs_id") == srs_id)
         .select("definition")
         .first()[0]
     )
+    return definition
 
 
 def read_gpkg(
