@@ -1,0 +1,21 @@
+
+name: Setup workflow environment
+description: Installs poetry, nox, and nox-poetry
+runs:
+  using: composite
+  steps:
+    - name: Install GDAL 3.4.3
+      run: |
+        sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
+        sudo apt-get update
+        sudo apt-get install -y libgdal-dev=3.4.3+dfsg-1~focal0
+      shell: bash
+    - name: Install poetry
+      run: curl -sSL https://install.python-poetry.org | python3 -
+      shell: bash
+    - name: Install nox
+      run: pip install nox
+      shell: bash
+    - name: Install nox-poetry
+      run: pip install nox-poetry
+      shell: bash

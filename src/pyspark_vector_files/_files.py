@@ -141,7 +141,8 @@ def _get_layer_names(
 
 def _get_feature_count(data_source: DataSource, layer_name: str) -> int:
     layer = data_source.GetLayer(layer_name)
-    feat_count = layer.GetFeatureCount()
+    # ! Explicitly coerce `feat_count` to `int` to prevent `mypy` `[no-any-return]`
+    feat_count: int = layer.GetFeatureCount()
     if feat_count == -1:
         feat_count = layer.GetFeatureCount(force=True)
     return feat_count

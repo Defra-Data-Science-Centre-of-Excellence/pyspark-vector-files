@@ -62,7 +62,7 @@ def test__get_paths(
     if isinstance(_expected_paths, str):
         assert paths == (_expected_paths,)
     else:
-        assert paths == _expected_paths
+        assert sorted(paths) == sorted(_expected_paths)
 
 
 @pytest.mark.parametrize(
