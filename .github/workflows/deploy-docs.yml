@@ -3,7 +3,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'src/**'
+      - "src/**"
+      - "source/**"
 jobs:
   build-and-deploy:
     name: Build and deploy documentation
