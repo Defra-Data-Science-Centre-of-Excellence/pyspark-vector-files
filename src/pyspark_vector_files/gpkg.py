@@ -348,14 +348,16 @@ def get_bounds(
              is provided, the active session will be used. Defaults to None.
 
     Returns:
-        Tuple[float]:  a tuple containing `minx`, `miny`, `maxx`, `maxy` values for the layer.
+        Tuple[float, ...]: a tuple containing `minx`, `miny`, `maxx`, `maxy` values
+            for the layer.
     """  # noqa: B950
     _spark = spark if spark else SparkSession.getActiveSession()
     gpkg_contents = _get_gpkg_contents(
         path=path,
         spark=_spark,
     )
-    # ! Explicitly coerce `bounds` to `Tuple[float]` to prevent `mypy` `[no-any-return]`
+    # ! Explicitly coerce `bounds` to `Tuple[float, ...]` to prevent `mypy`
+    # ! `[no-any-return]`
     bounds: Tuple[float, ...] = tuple(
         gpkg_contents.filter(col("table_name") == layer_name)
         .select(array(col("min_x"), col("min_y"), col("max_x"), col("max_y")))
