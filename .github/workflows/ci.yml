@@ -53,7 +53,7 @@ jobs:
       - name: Run nox
         run: poetry run nox -s tests
   lint:
-    name: Lint with flake8
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
