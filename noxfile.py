@@ -56,10 +56,9 @@ def safety(session: Session) -> None:
         "check",
         "--full-report",
         f"--file={requirements}",
-        # ! Ignoring numpy vulnerability as it was apparently
-        # ! fixed on 2022-02-02 by https://github.com/numpy/numpy/pull/20960
-        # ! but the Safety database hasn't been updated yet (EFT, 2022-02-22)
-        "--ignore=44715",
+        # ! Ignoring GDAL vulnerability as v3.4.3 is the latest version
+        # ! available through ubuntugis-unstable (EFT, 2022-08-10)
+        "--ignore=48545",
     )
 
 
