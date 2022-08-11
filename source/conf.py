@@ -36,6 +36,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.githubpages",
     "myst_parser",
+    "piccolo_theme",
 ]
 
 # Napoleon settings
