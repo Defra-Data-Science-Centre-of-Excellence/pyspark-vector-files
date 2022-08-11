@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -12,6 +12,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,32 +36,32 @@
   <div class="toctree-wrapper compound">
 </div>
 <p><a class="reference external" href="https://github.com/Defra-Data-Science-Centre-of-Excellence/pyspark-vector-files/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Defra-Data-Science-Centre-of-Excellence/pyspark-vector-files/actions/workflows/ci.yml/badge.svg" /></a></p>
-<section class="tex2jax_ignore mathjax_ignore" id="pyspark-vector-files">
-<h1>PySpark Vector Files<a class="headerlink" href="#pyspark-vector-files" title="Permalink to this headline">¶</a></h1>
+<section id="pyspark-vector-files">
+<h1>PySpark Vector Files<a class="headerlink" href="#pyspark-vector-files" title="Permalink to this heading">¶</a></h1>
 <p>Read <a class="reference external" href="https://gdal.org/drivers/vector/index.html">vector files</a> into a <a class="reference external" href="https://spark.apache.org/docs/latest/sql-programming-guide.html#datasets-and-dataframes">Spark DataFrame</a> with geometry encoded as <a class="reference external" href="https://libgeos.org/specifications/wkb/">Well Known Binary (WKB)</a>.</p>
 <p>Full documentation is available <a class="reference external" href="https://defra-data-science-centre-of-excellence.github.io/pyspark-vector-files/">here</a>.</p>
 <section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
 <p>This library was developed using <a class="reference external" href="https://docs.databricks.com/release-notes/runtime/9.1.html">Databricks Runtime 9.1 LTS</a> and uses the versions of <code class="docutils literal notranslate"><span class="pre">python</span></code>, <code class="docutils literal notranslate"><span class="pre">pandas</span></code> and <code class="docutils literal notranslate"><span class="pre">pyspark</span></code> that come pre-installed on that runtime. However, it also requires <code class="docutils literal notranslate"><span class="pre">GDAL</span> <span class="pre">3.4.0</span></code>.</p>
 <p>You can install <code class="docutils literal notranslate"><span class="pre">GDAL</span></code> on your cluster using an <a class="reference external" href="https://docs.microsoft.com/en-us/azure/databricks/clusters/init-scripts">init script</a>. See <span class="xref myst">here</span> for an example.</p>
 </section>
 <section id="install-pyspark-vector-files">
-<h2>Install <code class="docutils literal notranslate"><span class="pre">pyspark-vector-files</span></code><a class="headerlink" href="#install-pyspark-vector-files" title="Permalink to this headline">¶</a></h2>
+<h2>Install <code class="docutils literal notranslate"><span class="pre">pyspark-vector-files</span></code><a class="headerlink" href="#install-pyspark-vector-files" title="Permalink to this heading">¶</a></h2>
 <section id="within-a-databricks-notebook">
-<h3>Within a Databricks notebook<a class="headerlink" href="#within-a-databricks-notebook" title="Permalink to this headline">¶</a></h3>
+<h3>Within a Databricks notebook<a class="headerlink" href="#within-a-databricks-notebook" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%pip install pyspark-vector-files
 </pre></div>
 </div>
 </section>
 <section id="from-the-command-line">
-<h3>From the command line<a class="headerlink" href="#from-the-command-line" title="Permalink to this headline">¶</a></h3>
+<h3>From the command line<a class="headerlink" href="#from-the-command-line" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python -m pip install pyspark-vector-files
 </pre></div>
 </div>
 </section>
 </section>
 <section id="quick-start">
-<h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this heading">¶</a></h2>
 <p>Read the first layer from a file or files with given extension into a single Spark DataFrame:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark_vector_files</span> <span class="kn">import</span> <span class="n">read_vector_files</span>
 
@@ -73,10 +74,10 @@
 <p>More examples are available <a class="reference external" href="https://defra-data-science-centre-of-excellence.github.io/pyspark-vector-files/usage.html">here</a>.</p>
 </section>
 <section id="local-development">
-<h2>Local development<a class="headerlink" href="#local-development" title="Permalink to this headline">¶</a></h2>
+<h2>Local development<a class="headerlink" href="#local-development" title="Permalink to this heading">¶</a></h2>
 <p>To ensure compatibility with <a class="reference external" href="https://docs.databricks.com/release-notes/runtime/9.1.html">Databricks Runtime 9.1 LTS</a>, this package was developed on a Linux machine running the <code class="docutils literal notranslate"><span class="pre">Ubuntu</span> <span class="pre">20.04</span> <span class="pre">LTS</span></code> operating system using <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8.8</span></code>, <code class="docutils literal notranslate"><span class="pre">GDAL</span> <span class="pre">3.4.0</span></code>, and <code class="docutils literal notranslate"><span class="pre">spark</span> <span class="pre">3.1.2</span></code>.</p>
 <section id="install-python-3-8-8-using-pyenv">
-<h3>Install <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8.8</span></code> using <a class="reference external" href="https://github.com/pyenv/pyenv">pyenv</a><a class="headerlink" href="#install-python-3-8-8-using-pyenv" title="Permalink to this headline">¶</a></h3>
+<h3>Install <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8.8</span></code> using <a class="reference external" href="https://github.com/pyenv/pyenv">pyenv</a><a class="headerlink" href="#install-python-3-8-8-using-pyenv" title="Permalink to this heading">¶</a></h3>
 <p>See the <code class="docutils literal notranslate"><span class="pre">pyenv-installer</span></code>’s <a class="reference external" href="https://github.com/pyenv/pyenv-installer#installation--update--uninstallation">Installation / Update / Uninstallation</a> instructions.</p>
 <p>Install Python 3.8.8 globally:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pyenv install <span class="m">3</span>.8.8
@@ -88,7 +89,7 @@
 </div>
 </section>
 <section id="install-gdal-3-4-0">
-<h3>Install <code class="docutils literal notranslate"><span class="pre">GDAL</span> <span class="pre">3.4.0</span></code><a class="headerlink" href="#install-gdal-3-4-0" title="Permalink to this headline">¶</a></h3>
+<h3>Install <code class="docutils literal notranslate"><span class="pre">GDAL</span> <span class="pre">3.4.0</span></code><a class="headerlink" href="#install-gdal-3-4-0" title="Permalink to this heading">¶</a></h3>
 <p>Add the <a class="reference external" href="https://launchpad.net/~ubuntugis/+archive/ubuntu/ubuntugis-unstable">UbuntuGIS unstable Private Package Archive (PPA)</a>
 and update your package list:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable <span class="se">\</span>
@@ -110,17 +111,17 @@ avoid version conflicts:</p>
 </div>
 </section>
 <section id="install-poetry-1-1-13">
-<h3>Install <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">1.1.13</span></code><a class="headerlink" href="#install-poetry-1-1-13" title="Permalink to this headline">¶</a></h3>
+<h3>Install <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">1.1.13</span></code><a class="headerlink" href="#install-poetry-1-1-13" title="Permalink to this heading">¶</a></h3>
 <p>See poetry’s <a class="reference external" href="https://python-poetry.org/docs/#osx--linux--bashonwindows-install-instructions">osx / linux / bashonwindows install instructions</a></p>
 </section>
 <section id="clone-this-repository">
-<h3>Clone this repository<a class="headerlink" href="#clone-this-repository" title="Permalink to this headline">¶</a></h3>
+<h3>Clone this repository<a class="headerlink" href="#clone-this-repository" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/Defra-Data-Science-Centre-of-Excellence/pyspark_vector_files.git
 </pre></div>
 </div>
 </section>
 <section id="install-dependencies-using-poetry">
-<h3>Install dependencies using <code class="docutils literal notranslate"><span class="pre">poetry</span></code><a class="headerlink" href="#install-dependencies-using-poetry" title="Permalink to this headline">¶</a></h3>
+<h3>Install dependencies using <code class="docutils literal notranslate"><span class="pre">poetry</span></code><a class="headerlink" href="#install-dependencies-using-poetry" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>poetry install
 </pre></div>
 </div>
@@ -128,7 +129,7 @@ avoid version conflicts:</p>
 </section>
 </section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
@@ -176,7 +177,7 @@ avoid version conflicts:</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -193,7 +194,7 @@ avoid version conflicts:</p>
       &copy;2022, Ed Fawcett-Taylor, Dan Lewis.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

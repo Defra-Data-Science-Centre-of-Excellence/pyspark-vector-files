@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -12,6 +12,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,10 +35,10 @@
           <div class="body" role="main">
             
   <section id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h1>
 <p>Read various spatial vector formats into a Spark DataFrame.</p>
 <section id="basic-usage">
-<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">¶</a></h2>
 <p>Read the first layer from a file or files into a single Spark DataFrame:</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
@@ -48,7 +49,7 @@
 </div>
 </section>
 <section id="filename-pattern-matching">
-<h2>Filename pattern matching<a class="headerlink" href="#filename-pattern-matching" title="Permalink to this headline">¶</a></h2>
+<h2>Filename pattern matching<a class="headerlink" href="#filename-pattern-matching" title="Permalink to this heading">¶</a></h2>
 <p>Read files that begin with “abc” into a single Spark DataFrame:</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
@@ -71,7 +72,7 @@
 Python’s <a class="reference external" href="https://docs.python.org/3/library/fnmatch.html#module-fnmatch">fnmatch</a> module.</p>
 </section>
 <section id="reading-files-from-nested-folders">
-<h2>Reading files from nested folders<a class="headerlink" href="#reading-files-from-nested-folders" title="Permalink to this headline">¶</a></h2>
+<h2>Reading files from nested folders<a class="headerlink" href="#reading-files-from-nested-folders" title="Permalink to this heading">¶</a></h2>
 <p>By default, the library will only look within the specified folder. To enable
 recursive searching of subdirectories, use the <cite>recursive</cite> argument.</p>
 <p class="rubric">Example</p>
@@ -103,7 +104,7 @@ recursive searching of subdirectories, use the <cite>recursive</cite> argument.<
 <cite>subfolder/file_3.ext</cite>.</p>
 </section>
 <section id="reading-layers">
-<h2>Reading layers<a class="headerlink" href="#reading-layers" title="Permalink to this headline">¶</a></h2>
+<h2>Reading layers<a class="headerlink" href="#reading-layers" title="Permalink to this heading">¶</a></h2>
 <p>Read a specific layer for a file or files, using layer name:</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
@@ -124,7 +125,7 @@ recursive searching of subdirectories, use the <cite>recursive</cite> argument.<
 </div>
 </section>
 <section id="gdal-virtual-file-systems">
-<h2>GDAL Virtual File Systems<a class="headerlink" href="#gdal-virtual-file-systems" title="Permalink to this headline">¶</a></h2>
+<h2>GDAL Virtual File Systems<a class="headerlink" href="#gdal-virtual-file-systems" title="Permalink to this heading">¶</a></h2>
 <p>Read compressed files using GDAL Virtual File Systems:</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
@@ -138,7 +139,7 @@ recursive searching of subdirectories, use the <cite>recursive</cite> argument.<
 <p>For more information, see <a class="reference external" href="https://gdal.org/user/virtual_file_systems.html">GDAL Virtual File Systems</a>.</p>
 </section>
 <section id="user-defined-schema">
-<h2>User-defined Schema<a class="headerlink" href="#user-defined-schema" title="Permalink to this headline">¶</a></h2>
+<h2>User-defined Schema<a class="headerlink" href="#user-defined-schema" title="Permalink to this heading">¶</a></h2>
 <p>By default, a schema will be generated from the first file in the folder. For a
 single tabular dataset that has been partitioned across several files, this will
 work fine.</p>
@@ -166,7 +167,7 @@ to set the coerce_to_schema flag to True.</p>
 </div>
 </section>
 <section id="concurrency-strategy">
-<h2>Concurrency Strategy<a class="headerlink" href="#concurrency-strategy" title="Permalink to this headline">¶</a></h2>
+<h2>Concurrency Strategy<a class="headerlink" href="#concurrency-strategy" title="Permalink to this heading">¶</a></h2>
 <p>By default, the function will parallelise across files.</p>
 <p>This should work well for single dataset that has been partitioned across several
 files. Especially if it has been partition so that those individual files can be
@@ -199,6 +200,138 @@ count. The “rows” strategy should only be used for a single large file or a 
 number of large files.</p>
 </div>
 </section>
+<p>Functions for reading a GeoPackage using Spark’s JDBC drivers.</p>
+<section id="reading-a-geopackage-using-spark-s-jdbc-drivers">
+<h2>Reading a GeoPackage using Spark’s JDBC drivers.<a class="headerlink" href="#reading-a-geopackage-using-spark-s-jdbc-drivers" title="Permalink to this heading">¶</a></h2>
+<section id="register-the-geopackage-dialect">
+<h3>Register the GeoPackage Dialect<a class="headerlink" href="#register-the-geopackage-dialect" title="Permalink to this heading">¶</a></h3>
+<p>To read a GeoPackage using Spark’s JDBC drivers, you will need to register a custom
+mapping of GeoPackage to Spark Catalyst types.</p>
+<p>To do this, run the following in a Databricks notebook cell:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">scala</span><span class="w"></span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">jdbc</span><span class="p">.{</span><span class="nc">JdbcDialect</span><span class="p">,</span><span class="w"> </span><span class="nc">JdbcDialects</span><span class="p">}</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">types</span><span class="p">.</span><span class="n">_</span>
+
+<span class="k">object</span><span class="w"> </span><span class="nc">GeoPackageDialect</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">JdbcDialect</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">override</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">canHandle</span><span class="p">(</span><span class="n">url</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">url</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s">&quot;jdbc:sqlite&quot;</span><span class="p">)</span><span class="w"></span>
+
+<span class="k">override</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">getCatalystType</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="n">sqlType</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="n">typeName</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="n">size</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="n">md</span><span class="p">:</span><span class="w"> </span><span class="nc">MetadataBuilder</span><span class="w"></span>
+<span class="p">):</span><span class="w"> </span><span class="nc">Option</span><span class="p">[</span><span class="nc">DataType</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeName</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;BOOLEAN&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">BooleanType</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;TINYINT&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">ByteType</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;SMALLINT&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">ShortType</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;MEDIUMINT&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">IntegerType</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;INT&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;INTEGER&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">LongType</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;FLOAT&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">FloatType</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;DOUBLE&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;REAL&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">DoubleType</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;TEXT&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">StringType</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;BLOB&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">BinaryType</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;GEOMETRY&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;POINT&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;LINESTRING&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;POLYGON&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;MULTIPOINT&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;MULTILINESTRING&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;MULTIPOLYGON&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;GEOMETRYCOLLECTION&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;CIRCULARSTRING&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;COMPOUNDCURVE&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;CURVEPOLYGON&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;MULTICURVE&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;MULTISURFACE&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&quot;CURVE&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;SURFACE&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">BinaryType</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;DATE&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">DateType</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;DATETIME&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="nc">StringType</span><span class="p">)</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="nc">JdbcDialects</span><span class="p">.</span><span class="n">registerDialect</span><span class="p">(</span><span class="nc">GeoPackageDialect</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Once you’ve registered the GeoPackage dialect, you can list the layers in a given
+GeoPackage, get the coordinate reference system of a given layer, or read a layer
+into a Spark DataFrame with the geometry column encoded as Well Known Binary.</p>
+</section>
+<section id="list-layers">
+<h3>List layers<a class="headerlink" href="#list-layers" title="Permalink to this heading">¶</a></h3>
+<p>To list the layers in a given GeoPackage, use <a class="reference internal" href="api.html#pyspark_vector_files.gpkg.list_layers" title="pyspark_vector_files.gpkg.list_layers"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_layers()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">list_layers</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/file.gpkg&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="get-the-coordinate-reference-system-of-a-layer">
+<h3>Get the coordinate reference system of a layer<a class="headerlink" href="#get-the-coordinate-reference-system-of-a-layer" title="Permalink to this heading">¶</a></h3>
+<p>To get the coordinate reference system of a layers in a given GeoPackage, use
+<a class="reference internal" href="api.html#pyspark_vector_files.gpkg.get_crs" title="pyspark_vector_files.gpkg.get_crs"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_crs()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">get_crs</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/file.gpkg&quot;</span>
+    <span class="n">layer_name</span><span class="o">=</span><span class="s2">&quot;layer_name&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="read-a-layer-into-a-spark-dataframe">
+<h3>Read a layer into a Spark DataFrame<a class="headerlink" href="#read-a-layer-into-a-spark-dataframe" title="Permalink to this heading">¶</a></h3>
+<p>To read a layer into a Spark DataFrame, use <a class="reference internal" href="api.html#pyspark_vector_files.gpkg.read_gpkg" title="pyspark_vector_files.gpkg.read_gpkg"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_gpkg()</span></code></a>, If you don’t supply
+a layer, the first layer will be read:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">read_gpkg</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/file.gpkg&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="read-a-specific-layer">
+<h4>Read a specific layer<a class="headerlink" href="#read-a-specific-layer" title="Permalink to this heading">¶</a></h4>
+<p>If you supply a layer, that will be read:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="n">read_gpkg</span><span class="p">(</span>
+     <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/file.gpkg&quot;</span>
+     <span class="n">layer_name</span><span class="o">=</span><span class="s2">&quot;layer_name&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="supply-a-custom-geometry-column-name">
+<h4>Supply a custom geometry column name<a class="headerlink" href="#supply-a-custom-geometry-column-name" title="Permalink to this heading">¶</a></h4>
+<p>The function will assume that the geometry column is called <cite>geom</cite>, if it’s called
+something else, supply a different <cite>original_geometry_column_name</cite>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">read_gpkg</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/file.gpkg&quot;</span>
+    <span class="n">layer_name</span><span class="o">=</span><span class="s2">&quot;layer_name&quot;</span>
+    <span class="n">original_geometry_column_name</span><span class="o">=</span><span class="s2">&quot;geometry&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="geopackage-geometry-encoding">
+<h4>GeoPackage Geometry Encoding<a class="headerlink" href="#geopackage-geometry-encoding" title="Permalink to this heading">¶</a></h4>
+<p><a class="reference external" href="https://www.geopackage.org/spec/#gpb_format">GeoPackage Geometry Encoding</a> consists of two parts:</p>
+<ol class="arabic simple">
+<li><p>A GeoPackage Binary (GPB) header</p></li>
+<li><p>A Well Known Binary (WKB) geometry</p></li>
+</ol>
+<p>By default, the function will split the original geometry column into these two
+parts, unpack the GPB header, and return both as, respectively, <cite>gpb_header</cite> and
+<cite>wkb_geometry</cite>.</p>
+<p>If you don’t want the GPB header, set <cite>drop_gpb_header</cite> to <cite>True</cite>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">read_gpkg</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/file.gpkg&quot;</span>
+    <span class="n">layer_name</span><span class="o">=</span><span class="s2">&quot;layer_name&quot;</span>
+    <span class="n">drop_gpb_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The length of the GPB header depends on the format of envelope (bounding box) included
+in it. The function assumes that the envelope will be [minx, maxx, miny, maxy] and
+that, therefore, the GPB header will be 40 bytes long. However, it’s possible for the
+format of the envelope to be [minx, maxx, miny, maxy, minz, maxz] or [minx, maxx, miny,
+maxy, minm, maxm] and, therefore 56 bytes long, or [minx, maxx, miny, maxy, minz, maxz,
+minm, maxm] and, therefore, 72 bytes long.</p>
+<p>In these cases you will need to set <cite>header_length</cite> to the appropriate value:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">read_gpkg</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/file.gpkg&quot;</span>
+    <span class="n">layer_name</span><span class="o">=</span><span class="s2">&quot;layer_name&quot;</span>
+    <span class="n">header_length</span><span class="o">=</span><span class="mi">56</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
 </section>
 
 
@@ -228,6 +361,18 @@ number of large files.</p>
 <li class="toctree-l2"><a class="reference internal" href="#gdal-virtual-file-systems">GDAL Virtual File Systems</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#user-defined-schema">User-defined Schema</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#concurrency-strategy">Concurrency Strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-a-geopackage-using-spark-s-jdbc-drivers">Reading a GeoPackage using Spark’s JDBC drivers.</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#register-the-geopackage-dialect">Register the GeoPackage Dialect</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#list-layers">List layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-the-coordinate-reference-system-of-a-layer">Get the coordinate reference system of a layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-a-layer-into-a-spark-dataframe">Read a layer into a Spark DataFrame</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#read-a-specific-layer">Read a specific layer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#supply-a-custom-geometry-column-name">Supply a custom geometry column name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geopackage-geometry-encoding">GeoPackage Geometry Encoding</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
@@ -251,7 +396,7 @@ number of large files.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -268,7 +413,7 @@ number of large files.</p>
       &copy;2022, Ed Fawcett-Taylor, Dan Lewis.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
