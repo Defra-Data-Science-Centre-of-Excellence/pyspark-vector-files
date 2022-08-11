@@ -109,6 +109,7 @@ def docs_build(session: Session) -> None:
     session.install(
         "sphinx",
         "myst_parser",
+        "piccolo_theme",
     )
 
     build_dir = Path("_build")
