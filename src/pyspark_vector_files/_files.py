@@ -65,6 +65,15 @@ def _get_data_source_layer_names(data_source: DataSource) -> Tuple[str, ...]:
 
 @singledispatch
 def _get_layer_name(
+    layer_identifier: Optional[Union[str, int]],
+    data_source: DataSource,
+) -> Layer:
+    """Returns the layer name, the layer name at an index, or the first layer name."""
+    pass
+
+
+@_get_layer_name.register
+def _get_layer_name_none(
     layer_identifier: None,
     data_source: DataSource,
 ) -> Layer:
