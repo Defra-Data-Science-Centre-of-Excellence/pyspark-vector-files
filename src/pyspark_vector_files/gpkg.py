@@ -158,11 +158,11 @@ In these cases you will need to set `header_length` to the appropriate value:
 """
 from functools import partial
 from struct import unpack
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from pyspark.sql import DataFrame as SparkDataFrame
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, collect_list, expr, udf
+from pyspark.sql.functions import array, col, collect_list, expr, udf
 from pyspark.sql.types import (
     ArrayType,
     DoubleType,
@@ -324,6 +324,44 @@ def get_crs(
         .first()[0]
     )
     return definition
+
+
+def get_bounds(
+    path: str,
+    layer_name: str,
+    spark: Optional[SparkSession] = None,
+) -> Tuple[float, ...]:
+    """Get bounding box of a layer in a GeoPackage.
+
+    Examples:
+        >>> get_bounds(
+            "/dbfs/mnt/base/unrestricted/source_rpa_spatial_data_mart/dataset_rpa_reference_parcels/format_GPKG_rpa_reference_parcels/LATEST_rpa_reference_parcels/reference_parcels.gpkg",
+            layer_name="reference_parcels",
+        )
+        (85668.93009999998, 7079.01, 654494.0698999999, 657493.4378)
+
+    Args:
+        path (str): Path to the GeoPackage. Must use the File API Format, i.e.
+            start with `/dbfs` instead of `dbfs:`.
+        layer_name (str): The name of the layer to read.
+        spark (Optional[SparkSession], optional): The SparkSession to use. If none
+             is provided, the active session will be used. Defaults to None.
+
+    Returns:
+        Tuple[float]:  a tuple containing `minx`, `miny`, `maxx`, `maxy` values for the layer.
+    """  # noqa: B950
+    _spark = spark if spark else SparkSession.getActiveSession()
+    gpkg_contents = _get_gpkg_contents(
+        path=path,
+        spark=_spark,
+    )
+    # ! Explicitly coerce `bounds` to `Tuple[float]` to prevent `mypy` `[no-any-return]`
+    bounds: Tuple[float, ...] = tuple(
+        gpkg_contents.filter(col("table_name") == layer_name)
+        .select(array(col("min_x"), col("min_y"), col("max_x"), col("max_y")))
+        .first()[0]
+    )
+    return bounds
 
 
 def read_gpkg(
