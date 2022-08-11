@@ -9,10 +9,10 @@ repository = "https://github.com/Defra-Data-Science-Centre-of-Excellence/pyspark
 documentation = "https://defra-data-science-centre-of-excellence.github.io/pyspark-vector-files/"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "~3.8"
 more-itertools = "^8.12.0"
 pandas = "1.2.4"
-pyspark = ">= 3.1.2, <= 3.2.1"
+pyspark = "3.2.1"
 GDAL = "3.4.3"
 
 [tool.poetry.dev-dependencies]
@@ -40,7 +40,7 @@ pyarrow = "^9.0.0"
 ipykernel = "^6.15.1"
 geopandas = "^0.11.1"
 nox-poetry = "^1.0.1"
-pytest-datadir = "^1.3.1"
+piccolo-theme = "^0.11.1"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
