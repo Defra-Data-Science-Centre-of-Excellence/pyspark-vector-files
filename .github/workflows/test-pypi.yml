@@ -5,24 +5,25 @@ on:
       - main
 jobs:
   test_pypi:
+    name: Test upload to PyPi
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-        architecture: x64
-    - name: Install poetry
-      run: python -m pip install poetry==1.1.13
-    - run: >-
-        poetry version patch &&
-        version=$(poetry version | awk '{print $2}') &&
-        poetry version $version.dev.$(date +%s)
-    - run: poetry build
-    - uses: pypa/gh-action-pypi-publish@v1.0.0a0
-      with:
-        user: __token__
-        password: ${{ secrets.TEST_PYPI_TOKEN }}
-        repository_url: https://test.pypi.org/legacy/
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+          architecture: x64
+      - name: Setup environment
+        uses: ./actions/setup-environment
+      - run: >-
+          poetry version patch &&
+          version=$(poetry version | awk '{print $2}') &&
+          poetry version $version.dev.$(date +%s)
+      - run: poetry build
+      - uses: pypa/gh-action-pypi-publish@v1.0.0a0
+        with:
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
