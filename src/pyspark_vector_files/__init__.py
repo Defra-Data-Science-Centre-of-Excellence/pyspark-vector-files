@@ -245,7 +245,7 @@ OGR_TO_SPARK = MappingProxyType(
         (3, 0): ArrayType(DoubleType()),  # OFTRealList
         (3, 3): ArrayType(FloatType()),  # List of OFSTFloat32
         (4, 0): StringType(),  # OFTString
-        # ? Could this be MapType?
+        # ? Could OFSTJSON be MapType?
         (4, 4): StringType(),  # OFSTJSON
         (4, 5): StringType(),  # OFSTUUID
         (5, 0): ArrayType(StringType()),  # OFTStringList
