@@ -5,8 +5,9 @@ Basic usage
 
 Read the first layer from a file or files into a single Spark DataFrame:
 
-Example:
-    >>> sdf = read_vector_files(
+.. code-block:: python
+
+    sdf = read_vector_files(
         path="/path/to/files/",
         suffix=".ext",
     )
@@ -16,8 +17,9 @@ Filename pattern matching
 
 Read files that begin with "abc" into a single Spark DataFrame:
 
-Example:
-    >>> sdf = read_vector_files(
+.. code-block:: python
+
+    sdf = read_vector_files(
         path="/path/to/files/",
         pattern="abc*",
         suffix=".ext",
@@ -25,8 +27,9 @@ Example:
 
 Read files that end with four digits into a single Spark DataFrame:
 
-Example:
-    >>> sdf = read_vector_files(
+.. code-block:: python
+
+    sdf = read_vector_files(
         path="/path/to/files/",
         pattern="*[0-9][0-9][0-9][0-9]",
         suffix=".ext",
@@ -41,41 +44,45 @@ Reading files from nested folders
 By default, the library will only look within the specified folder. To enable
 recursive searching of subdirectories, use the `recursive` argument.
 
-Example:
-    Given the following folder structure::
 
-        /path/to/files
-        |    file_0.ext
-        |    file_1.ext
-        |
-        |-- subfolder
-        |        file_2.ext
-        |        file_3.ext
+Given the following folder structure::
 
-    >>> sdf = read_vector_files(
+    /path/to/files
+    |    file_0.ext
+    |    file_1.ext
+    |
+    |-- subfolder
+    |        file_2.ext
+    |        file_3.ext
+
+.. code-block:: python
+
+    sdf = read_vector_files(
         path="/path/to/files/",
         suffix=".ext",
     )
 
-    will read `file_0.ext` and `file_1.ext`, while
+will read `file_0.ext` and `file_1.ext`, while
 
-    >>> sdf = read_vector_files(
+.. code-block:: python
+
+    sdf = read_vector_files(
         path="/path/to/files/",
         suffix=".ext",
         recursive=True,
     )
 
-    will read `file_0.ext`, `file_1.ext`, `subfolder/file_2.ext`, and
-    `subfolder/file_3.ext`.
-
+will read `file_0.ext`, `file_1.ext`, `subfolder/file_2.ext`, and
+`subfolder/file_3.ext`.
 
 Reading layers
 ==============
 
 Read a specific layer for a file or files, using layer name:
 
-Example:
-    >>> sdf = read_vector_files(
+.. code-block:: python
+
+    sdf = read_vector_files(
         path="/path/to/files/",
         suffix=".ext",
         layer_identifier="layer_name"
@@ -83,8 +90,9 @@ Example:
 
 or layer index:
 
-Example:
-    >>> sdf = read_vector_files(
+.. code-block:: python
+
+    sdf = read_vector_files(
         path="/path/to/files/",
         suffix=".ext",
         layer_identifier=1
@@ -95,8 +103,9 @@ GDAL Virtual File Systems
 
 Read compressed files using GDAL Virtual File Systems:
 
-Example:
-    >>> sdf = read_vector_files(
+.. code-block:: python
+
+    sdf = read_vector_files(
         path="/path/to/files/",
         suffix=".gz",
         layer_identifier="layer_name",
@@ -116,8 +125,9 @@ However, it won't work for a list format like GML, as not every file will contai
 the same fields. In this case, you can define a schema yourself. You will also need
 to set the coerce_to_schema flag to True.
 
-Example:
-    >>> schema = StructType(
+.. code-block:: python
+
+    schema = StructType(
         [
             StructField("id", LongType()),
             StructField("category", StringType()),
@@ -125,7 +135,7 @@ Example:
         ]
     )
 
-    >>> sdf = read_vector_files(
+    sdf = read_vector_files(
         path="/path/to/files/",
         suffix=".ext",
         layer_identifier="layer_name",
@@ -145,18 +155,20 @@ comfortably read into memory on a single machine.
 However, the function also provides a way of parallelising across chunks of rows
 within a file or files.
 
-Example:
-    >>> sdf = read_vector_files(
+.. code-block:: python
+
+    sdf = read_vector_files(
         path="/path/to/files/",
         suffix=".ext",
         concurrency_strategy="rows",
     )
 
-By default, a chunk will consist of 1 million rows but you cab change this using the
-ideal_chunk_size parameter.
+By default, a chunk will consist of 1 million rows but you can change this using the
+`ideal_chunk_size` parameter.
 
-Example:
-    >>> sdf = read_vector_files(
+.. code-block:: python
+
+    sdf = read_vector_files(
         path="/path/to/files/",
         suffix=".ext",
         concurrency_strategy="rows",
@@ -293,7 +305,7 @@ def read_vector_files(
             `Path.glob` method. For more information, see
             https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob.
             Defaults to "*".
-        suffix (str): A file extention pattern. This will be passed to to `pathlib`'s
+        suffix (str): A file extension pattern. This will be passed to to `pathlib`'s
             `Path.glob` method. For more information, see
             https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob.
             Defaults to "*".
@@ -313,7 +325,7 @@ def read_vector_files(
         spark_to_pandas_type_map (MappingProxyType): A mapping of Spark to Pandas data
             types. Defaults to SPARK_TO_PANDAS.
         concurrency_strategy (str): The concurrency strategy to use, can be "files"
-            or "chunks". Defaults to "files".
+            or "rows". Defaults to "files".
         vsi_prefix (str, optional): The GDAL virtual file system prefix(es) to use.
             For more information, see https://gdal.org/user/virtual_file_systems.html.
             Defaults to None.
@@ -322,7 +334,11 @@ def read_vector_files(
             None is given, the first layer will be return. Defaults to None.
 
     Returns:
-        SparkDataFrame: [description]
+        SparkDataFrame: A Spark DataFrame with geometry encoded as
+            `Well Known Binary (WKB)`_.
+
+    .. _`Well Known Binary (WKB)`:
+        https://libgeos.org/specifications/wkb/
     """
     _concurrency_strategy = ConcurrencyStrategy(concurrency_strategy)
 

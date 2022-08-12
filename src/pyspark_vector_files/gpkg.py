@@ -75,6 +75,19 @@ To get the coordinate reference system of a layers in a given GeoPackage, use
         layer_name="layer_name"
     )
 
+Get the bounding box of a layer
+-------------------------------
+
+To get the bounding box of a layers in a given GeoPackage, use
+:func:`get_bounds`:
+
+.. code-block:: python
+
+    get_bounds(
+        path="/path/to/file.gpkg"
+        layer_name="layer_name"
+    )
+
 Read a layer into a Spark DataFrame
 -----------------------------------
 
@@ -119,7 +132,7 @@ GeoPackage Geometry Encoding
 `GeoPackage Geometry Encoding`_ consists of two parts:
 
 1. A GeoPackage Binary (GPB) header
-2. A Well Known Binary (WKB) geometry
+2. A `Well Known Binary (WKB)`_ geometry
 
 By default, the function will split the original geometry column into these two
 parts, unpack the GPB header, and return both as, respectively, `gpb_header` and
@@ -154,6 +167,9 @@ In these cases you will need to set `header_length` to the appropriate value:
 
 .. _`GeoPackage Geometry Encoding`:
     https://www.geopackage.org/spec/#gpb_format
+
+.. _`Well Known Binary (WKB)`:
+    https://libgeos.org/specifications/wkb/
 
 """
 from functools import partial
@@ -391,11 +407,13 @@ def read_gpkg(
              is provided, the active session will be used. Defaults to None.
 
     Returns:
-        SparkDataFrame: A Spark DataFrame with the geometry encoded in Well Known
-            Binary.
+        SparkDataFrame: A Spark DataFrame with geometry encoded as
+            `Well Known Binary (WKB)`_.
 
     .. _`GPB header`:
         https://www.geopackage.org/spec/#gpb_format
+    .. _`Well Known Binary (WKB)`:
+        https://libgeos.org/specifications/wkb/
     """
     _spark = spark if spark else SparkSession.getActiveSession()
 
