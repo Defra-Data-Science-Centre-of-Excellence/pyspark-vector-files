@@ -1,7 +1,7 @@
 from types import MappingProxyType
 from typing import Optional, Tuple, Union
 
-from osgeo.ogr import DataSource, GetFieldTypeName, Layer, Open
+from osgeo.ogr import DataSource, Layer, Open
 from pyspark.sql.types import StructField, StructType
 
 from pyspark_vector_files._files import _get_layer_name
@@ -35,14 +35,18 @@ def _get_property_names(layer: Layer) -> Tuple[str, ...]:
     )
 
 
-def _get_property_types(layer: Layer) -> Tuple[str, ...]:
+def _get_property_types(layer: Layer) -> Tuple[Tuple[int, int], ...]:
     """Given a GDAL Layer, return the non-geometry field types."""
     layer_definition = layer.GetLayerDefn()
-    type_codes = tuple(
-        layer_definition.GetFieldDefn(index).GetType()
+    field_definitions = tuple(
+        layer_definition.GetFieldDefn(index)
         for index in range(layer_definition.GetFieldCount())
     )
-    return tuple(GetFieldTypeName(type_code) for type_code in type_codes)
+    type_codes = tuple(
+        (field_definition.GetType(), field_definition.GetSubType())
+        for field_definition in field_definitions
+    )
+    return tuple((type_code, subtype_code) for type_code, subtype_code in type_codes)
 
 
 def _get_feature_schema(
