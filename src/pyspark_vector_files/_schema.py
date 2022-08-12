@@ -42,11 +42,10 @@ def _get_property_types(layer: Layer) -> Tuple[Tuple[int, int], ...]:
         layer_definition.GetFieldDefn(index)
         for index in range(layer_definition.GetFieldCount())
     )
-    type_codes = tuple(
+    return tuple(
         (field_definition.GetType(), field_definition.GetSubType())
         for field_definition in field_definitions
     )
-    return tuple((type_code, subtype_code) for type_code, subtype_code in type_codes)
 
 
 def _get_feature_schema(
