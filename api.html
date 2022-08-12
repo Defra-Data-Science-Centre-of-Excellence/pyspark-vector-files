@@ -147,7 +147,7 @@ types. Defaults to OGR_TO_SPARK.</p></li>
 <cite>Path.glob</cite> method. For more information, see
 <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob">https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob</a>.
 Defaults to “*”.</p></li>
-<li><p><strong>suffix</strong> (<em>str</em>) – A file extention pattern. This will be passed to to <cite>pathlib</cite>’s
+<li><p><strong>suffix</strong> (<em>str</em>) – A file extension pattern. This will be passed to to <cite>pathlib</cite>’s
 <cite>Path.glob</cite> method. For more information, see
 <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob">https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob</a>.
 Defaults to “*”.</p></li>
@@ -167,7 +167,7 @@ columns will be removed. Defaults to False.</p></li>
 <li><p><strong>spark_to_pandas_type_map</strong> (<em>MappingProxyType</em>) – A mapping of Spark to Pandas data
 types. Defaults to SPARK_TO_PANDAS.</p></li>
 <li><p><strong>concurrency_strategy</strong> (<em>str</em>) – The concurrency strategy to use, can be “files”
-or “chunks”. Defaults to “files”.</p></li>
+or “rows”. Defaults to “files”.</p></li>
 <li><p><strong>vsi_prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – The GDAL virtual file system prefix(es) to use.
 For more information, see <a class="reference external" href="https://gdal.org/user/virtual_file_systems.html">https://gdal.org/user/virtual_file_systems.html</a>.
 Defaults to None.</p></li>
@@ -177,7 +177,11 @@ None is given, the first layer will be return. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>[description]</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>A Spark DataFrame with geometry encoded as</dt><dd><p><a class="reference external" href="https://libgeos.org/specifications/wkb/">Well Known Binary (WKB)</a>.</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>SparkDataFrame</p>
@@ -268,7 +272,7 @@ is provided, the active session will be used. Defaults to None.</p></li>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>A Spark DataFrame with the geometry encoded in Well Known</dt><dd><p>Binary.</p>
+<dt>A Spark DataFrame with geometry encoded as</dt><dd><p><a class="reference external" href="https://libgeos.org/specifications/wkb/">Well Known Binary (WKB)</a>.</p>
 </dd>
 </dl>
 </p>

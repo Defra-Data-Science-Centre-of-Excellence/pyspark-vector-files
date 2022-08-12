@@ -138,32 +138,29 @@
 <section id="basic-usage">
 <h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">¶</a></h2>
 <p>Read the first layer from a file or files into a single Spark DataFrame:</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
-<span class="go">    path=&quot;/path/to/files/&quot;,</span>
-<span class="go">    suffix=&quot;.ext&quot;,</span>
-<span class="go">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/files/&quot;</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ext&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="filename-pattern-matching">
 <h2>Filename pattern matching<a class="headerlink" href="#filename-pattern-matching" title="Permalink to this heading">¶</a></h2>
 <p>Read files that begin with “abc” into a single Spark DataFrame:</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
-<span class="go">    path=&quot;/path/to/files/&quot;,</span>
-<span class="go">    pattern=&quot;abc*&quot;,</span>
-<span class="go">    suffix=&quot;.ext&quot;,</span>
-<span class="go">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/files/&quot;</span><span class="p">,</span>
+    <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;abc*&quot;</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ext&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p>Read files that end with four digits into a single Spark DataFrame:</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
-<span class="go">    path=&quot;/path/to/files/&quot;,</span>
-<span class="go">    pattern=&quot;*[0-9][0-9][0-9][0-9]&quot;,</span>
-<span class="go">    suffix=&quot;.ext&quot;,</span>
-<span class="go">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/files/&quot;</span><span class="p">,</span>
+    <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;*[0-9][0-9][0-9][0-9]&quot;</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ext&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p>For more information on pattern matching using Unix shell-style wildcards, see
@@ -173,7 +170,6 @@ Python’s <a class="reference external" href="https://docs.python.org/3/library
 <h2>Reading files from nested folders<a class="headerlink" href="#reading-files-from-nested-folders" title="Permalink to this heading">¶</a></h2>
 <p>By default, the library will only look within the specified folder. To enable
 recursive searching of subdirectories, use the <cite>recursive</cite> argument.</p>
-<p class="rubric">Example</p>
 <p>Given the following folder structure:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">files</span>
 <span class="o">|</span>    <span class="n">file_0</span><span class="o">.</span><span class="n">ext</span>
@@ -184,18 +180,18 @@ recursive searching of subdirectories, use the <cite>recursive</cite> argument.<
 <span class="o">|</span>        <span class="n">file_3</span><span class="o">.</span><span class="n">ext</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
-<span class="go">    path=&quot;/path/to/files/&quot;,</span>
-<span class="go">    suffix=&quot;.ext&quot;,</span>
-<span class="go">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/files/&quot;</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ext&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p>will read <cite>file_0.ext</cite> and <cite>file_1.ext</cite>, while</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
-<span class="go">    path=&quot;/path/to/files/&quot;,</span>
-<span class="go">    suffix=&quot;.ext&quot;,</span>
-<span class="go">    recursive=True,</span>
-<span class="go">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/files/&quot;</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ext&quot;</span><span class="p">,</span>
+    <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p>will read <cite>file_0.ext</cite>, <cite>file_1.ext</cite>, <cite>subfolder/file_2.ext</cite>, and
@@ -204,34 +200,31 @@ recursive searching of subdirectories, use the <cite>recursive</cite> argument.<
 <section id="reading-layers">
 <h2>Reading layers<a class="headerlink" href="#reading-layers" title="Permalink to this heading">¶</a></h2>
 <p>Read a specific layer for a file or files, using layer name:</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
-<span class="go">    path=&quot;/path/to/files/&quot;,</span>
-<span class="go">    suffix=&quot;.ext&quot;,</span>
-<span class="go">    layer_identifier=&quot;layer_name&quot;</span>
-<span class="go">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/files/&quot;</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ext&quot;</span><span class="p">,</span>
+    <span class="n">layer_identifier</span><span class="o">=</span><span class="s2">&quot;layer_name&quot;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p>or layer index:</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
-<span class="go">    path=&quot;/path/to/files/&quot;,</span>
-<span class="go">    suffix=&quot;.ext&quot;,</span>
-<span class="go">    layer_identifier=1</span>
-<span class="go">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/files/&quot;</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ext&quot;</span><span class="p">,</span>
+    <span class="n">layer_identifier</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="gdal-virtual-file-systems">
 <h2>GDAL Virtual File Systems<a class="headerlink" href="#gdal-virtual-file-systems" title="Permalink to this heading">¶</a></h2>
 <p>Read compressed files using GDAL Virtual File Systems:</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
-<span class="go">    path=&quot;/path/to/files/&quot;,</span>
-<span class="go">    suffix=&quot;.gz&quot;,</span>
-<span class="go">    layer_identifier=&quot;layer_name&quot;,</span>
-<span class="go">    vsi_prefix=&quot;/vsigzip/&quot;,</span>
-<span class="go">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/files/&quot;</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.gz&quot;</span><span class="p">,</span>
+    <span class="n">layer_identifier</span><span class="o">=</span><span class="s2">&quot;layer_name&quot;</span><span class="p">,</span>
+    <span class="n">vsi_prefix</span><span class="o">=</span><span class="s2">&quot;/vsigzip/&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p>For more information, see <a class="reference external" href="https://gdal.org/user/virtual_file_systems.html">GDAL Virtual File Systems</a>.</p>
@@ -244,23 +237,21 @@ work fine.</p>
 <p>However, it won’t work for a list format like GML, as not every file will contain
 the same fields. In this case, you can define a schema yourself. You will also need
 to set the coerce_to_schema flag to True.</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">(</span>
-<span class="go">    [</span>
-<span class="go">        StructField(&quot;id&quot;, LongType()),</span>
-<span class="go">        StructField(&quot;category&quot;, StringType()),</span>
-<span class="go">        StructField(&quot;geometry&quot;, BinaryType()),</span>
-<span class="go">    ]</span>
-<span class="go">)</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
-<span class="go">    path=&quot;/path/to/files/&quot;,</span>
-<span class="go">    suffix=&quot;.ext&quot;,</span>
-<span class="go">    layer_identifier=&quot;layer_name&quot;,</span>
-<span class="go">    schema=schema,</span>
-<span class="go">    coerce_to_schema=True,</span>
-<span class="go">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">schema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">LongType</span><span class="p">()),</span>
+        <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">()),</span>
+        <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;geometry&quot;</span><span class="p">,</span> <span class="n">BinaryType</span><span class="p">()),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/files/&quot;</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ext&quot;</span><span class="p">,</span>
+    <span class="n">layer_identifier</span><span class="o">=</span><span class="s2">&quot;layer_name&quot;</span><span class="p">,</span>
+    <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span>
+    <span class="n">coerce_to_schema</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -272,23 +263,21 @@ files. Especially if it has been partition so that those individual files can be
 comfortably read into memory on a single machine.</p>
 <p>However, the function also provides a way of parallelising across chunks of rows
 within a file or files.</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
-<span class="go">    path=&quot;/path/to/files/&quot;,</span>
-<span class="go">    suffix=&quot;.ext&quot;,</span>
-<span class="go">    concurrency_strategy=&quot;rows&quot;,</span>
-<span class="go">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/files/&quot;</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ext&quot;</span><span class="p">,</span>
+    <span class="n">concurrency_strategy</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-<p>By default, a chunk will consist of 1 million rows but you cab change this using the
-ideal_chunk_size parameter.</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
-<span class="go">    path=&quot;/path/to/files/&quot;,</span>
-<span class="go">    suffix=&quot;.ext&quot;,</span>
-<span class="go">    concurrency_strategy=&quot;rows&quot;,</span>
-<span class="go">    ideal_chunk_size=5_000_000,</span>
-<span class="go">)</span>
+<p>By default, a chunk will consist of 1 million rows but you can change this using the
+<cite>ideal_chunk_size</cite> parameter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span> <span class="o">=</span> <span class="n">read_vector_files</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/files/&quot;</span><span class="p">,</span>
+    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ext&quot;</span><span class="p">,</span>
+    <span class="n">concurrency_strategy</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span><span class="p">,</span>
+    <span class="n">ideal_chunk_size</span><span class="o">=</span><span class="mi">5_000_000</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition warning">
@@ -364,6 +353,17 @@ into a Spark DataFrame with the geometry column encoded as Well Known Binary.</p
 </pre></div>
 </div>
 </section>
+<section id="get-the-bounding-box-of-a-layer">
+<h3>Get the bounding box of a layer<a class="headerlink" href="#get-the-bounding-box-of-a-layer" title="Permalink to this heading">¶</a></h3>
+<p>To get the bounding box of a layers in a given GeoPackage, use
+<code class="xref py py-func docutils literal notranslate"><span class="pre">get_bounds()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">get_bounds</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/file.gpkg&quot;</span>
+    <span class="n">layer_name</span><span class="o">=</span><span class="s2">&quot;layer_name&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
 <section id="read-a-layer-into-a-spark-dataframe">
 <h3>Read a layer into a Spark DataFrame<a class="headerlink" href="#read-a-layer-into-a-spark-dataframe" title="Permalink to this heading">¶</a></h3>
 <p>To read a layer into a Spark DataFrame, use <a class="reference internal" href="api.html#pyspark_vector_files.gpkg.read_gpkg" title="pyspark_vector_files.gpkg.read_gpkg"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_gpkg()</span></code></a>, If you don’t supply
@@ -400,7 +400,7 @@ something else, supply a different <cite>original_geometry_column_name</cite>:</
 <p><a class="reference external" href="https://www.geopackage.org/spec/#gpb_format">GeoPackage Geometry Encoding</a> consists of two parts:</p>
 <ol class="arabic simple">
 <li><p>A GeoPackage Binary (GPB) header</p></li>
-<li><p>A Well Known Binary (WKB) geometry</p></li>
+<li><p>A <a class="reference external" href="https://libgeos.org/specifications/wkb/">Well Known Binary (WKB)</a> geometry</p></li>
 </ol>
 <p>By default, the function will split the original geometry column into these two
 parts, unpack the GPB header, and return both as, respectively, <cite>gpb_header</cite> and
@@ -458,6 +458,7 @@ minm, maxm] and, therefore, 72 bytes long.</p>
 <li><a class="reference internal" href="#register-the-geopackage-dialect">Register the GeoPackage Dialect</a></li>
 <li><a class="reference internal" href="#list-layers">List layers</a></li>
 <li><a class="reference internal" href="#get-the-coordinate-reference-system-of-a-layer">Get the coordinate reference system of a layer</a></li>
+<li><a class="reference internal" href="#get-the-bounding-box-of-a-layer">Get the bounding box of a layer</a></li>
 <li><a class="reference internal" href="#read-a-layer-into-a-spark-dataframe">Read a layer into a Spark DataFrame</a><ul>
 <li><a class="reference internal" href="#read-a-specific-layer">Read a specific layer</a></li>
 <li><a class="reference internal" href="#supply-a-custom-geometry-column-name">Supply a custom geometry column name</a></li>
