@@ -187,7 +187,7 @@ By default, a chunk will consist of 1 million rows but you can change this using
 """
 from contextlib import contextmanager
 from types import MappingProxyType
-from typing import Iterator, Optional, Union
+from typing import Iterator, Optional, Tuple, Union
 
 from numpy import bool_, float32, float64, int16, int32, int64, object0
 from pyspark.sql import DataFrame as SparkDataFrame
@@ -305,7 +305,7 @@ def read_vector_files(
     recursive: bool = False,
     ideal_chunk_size: int = 1_000_000,
     geom_field_name: str = "geometry",
-    geom_field_type: str = "Binary",
+    geom_field_type: Tuple[int, int] = (8, 0),
     coerce_to_schema: bool = False,
     spark_to_pandas_type_map: MappingProxyType = SPARK_TO_PANDAS,
     concurrency_strategy: str = "files",
@@ -335,8 +335,9 @@ def read_vector_files(
             Defaults to 1_000_000.
         geom_field_name (str): The name of the geometry column. Defaults to
             "geometry".
-        geom_field_type (str): The data type of the geometry column when it is
-            passed to Spark. Defaults to "Binary".
+        geom_field_type (Tuple[int, int]): The data type of the geometry column when
+            it is passed to Spark. Defaults to `(8, 0)`, which represents binary
+            data.
         coerce_to_schema (bool): If True, all files or chunks will be forced to
             fit the supplied schema. Missing columns will be added and additional
             columns will be removed. Defaults to False.

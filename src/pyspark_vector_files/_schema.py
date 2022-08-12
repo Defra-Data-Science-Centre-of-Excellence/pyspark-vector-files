@@ -53,7 +53,7 @@ def _get_feature_schema(
     layer: Layer,
     ogr_to_spark_type_map: MappingProxyType,
     geom_field_name: str,
-    geom_field_type: str,
+    geom_field_type: Tuple[int, int],
 ) -> StructType:
     """Given a GDAL Layer and a data type mapping, return a PySpark DataFrame schema."""
     property_names = _get_property_names(layer=layer)
@@ -72,7 +72,7 @@ def _create_schema_for_files(
     path: str,
     layer_identifier: Optional[Union[str, int]],
     geom_field_name: str,
-    geom_field_type: str,
+    geom_field_type: Tuple[int, int],
     ogr_to_spark_type_map: MappingProxyType,
 ) -> StructType:
     """Returns a schema for a given layer in the first file in a list of file paths."""
@@ -103,7 +103,7 @@ def _create_schema_for_chunks(
     data_source: Optional[DataSource],
     layer_name: str,
     geom_field_name: str,
-    geom_field_type: str,
+    geom_field_type: Tuple[int, int],
     ogr_to_spark_type_map: MappingProxyType,
 ) -> StructType:
     """Returns a schema for a given layer in the first file in a list of file paths."""

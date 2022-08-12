@@ -85,7 +85,7 @@ def test__get_feature_schema(
         layer=layer,
         ogr_to_spark_type_map=ogr_to_spark_mapping,
         geom_field_name="geometry",
-        geom_field_type="Binary",
+        geom_field_type=(8, 0),
     )
     assert schema == fileGDB_schema
 
@@ -102,7 +102,7 @@ def test__create_schema_for_chunks(
         data_source=data_source,
         layer_name="first",
         geom_field_name="geometry",
-        geom_field_type="Binary",
+        geom_field_type=(8, 0),
         ogr_to_spark_type_map=ogr_to_spark_mapping,
     )
     assert schema == fileGDB_schema
@@ -118,7 +118,7 @@ def test__create_schema_for_files(
         path=first_fileGDB_path,
         layer_identifier="first",
         geom_field_name="geometry",
-        geom_field_type="Binary",
+        geom_field_type=(8, 0),
         ogr_to_spark_type_map=ogr_to_spark_mapping,
     )
     assert schema == fileGDB_schema
