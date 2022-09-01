@@ -1,7 +1,7 @@
 from types import MappingProxyType
 from typing import Optional, Tuple, Union
 
-from osgeo.ogr import DataSource, GetFieldTypeName, Layer, Open
+from osgeo.ogr import DataSource, Layer, Open
 from pyspark.sql.types import StructField, StructType
 
 from pyspark_vector_files._files import _get_layer_name
@@ -35,21 +35,24 @@ def _get_property_names(layer: Layer) -> Tuple[str, ...]:
     )
 
 
-def _get_property_types(layer: Layer) -> Tuple[str, ...]:
+def _get_property_types(layer: Layer) -> Tuple[Tuple[int, int], ...]:
     """Given a GDAL Layer, return the non-geometry field types."""
     layer_definition = layer.GetLayerDefn()
-    type_codes = tuple(
-        layer_definition.GetFieldDefn(index).GetType()
+    field_definitions = tuple(
+        layer_definition.GetFieldDefn(index)
         for index in range(layer_definition.GetFieldCount())
     )
-    return tuple(GetFieldTypeName(type_code) for type_code in type_codes)
+    return tuple(
+        (field_definition.GetType(), field_definition.GetSubType())
+        for field_definition in field_definitions
+    )
 
 
 def _get_feature_schema(
     layer: Layer,
     ogr_to_spark_type_map: MappingProxyType,
     geom_field_name: str,
-    geom_field_type: str,
+    geom_field_type: Tuple[int, int],
 ) -> StructType:
     """Given a GDAL Layer and a data type mapping, return a PySpark DataFrame schema."""
     property_names = _get_property_names(layer=layer)
@@ -68,7 +71,7 @@ def _create_schema_for_files(
     path: str,
     layer_identifier: Optional[Union[str, int]],
     geom_field_name: str,
-    geom_field_type: str,
+    geom_field_type: Tuple[int, int],
     ogr_to_spark_type_map: MappingProxyType,
 ) -> StructType:
     """Returns a schema for a given layer in the first file in a list of file paths."""
@@ -99,7 +102,7 @@ def _create_schema_for_chunks(
     data_source: Optional[DataSource],
     layer_name: str,
     geom_field_name: str,
-    geom_field_type: str,
+    geom_field_type: Tuple[int, int],
     ogr_to_spark_type_map: MappingProxyType,
 ) -> StructType:
     """Returns a schema for a given layer in the first file in a list of file paths."""
