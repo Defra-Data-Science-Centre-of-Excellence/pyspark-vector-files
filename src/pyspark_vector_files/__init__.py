@@ -185,6 +185,17 @@ By default, a chunk will consist of 1 million rows but you can change this using
 .. _`GDAL Virtual File Systems`: https://gdal.org/user/virtual_file_systems.html
 
 """
+try:
+    from importlib.metadata import PackageNotFoundError, version  # type: ignore
+except ImportError:  # pragma: no cover
+    from importlib_metadata import PackageNotFoundError, version  # type: ignore
+
+
+try:
+    __version__ = version(__name__)
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "unknown"
+
 from contextlib import contextmanager
 from types import MappingProxyType
 from typing import Iterator, Optional, Tuple, Union
