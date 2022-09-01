@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyspark_vector_files"
-version = "0.2.1"
+version = "0.2.2"
 description = "Read vector files into a Spark DataFrame with geometry encoded as WKB."
 authors = ["Ed Fawcett-Taylor <ed.fawcett-taylor@defra.gov.uk>"]
 license = "MIT"
