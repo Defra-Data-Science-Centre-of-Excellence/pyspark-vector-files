@@ -17,13 +17,28 @@ from pyspark.sql.types import (
 
 from pyspark_vector_files._types import Chunks
 
+def _check_compressed(path: str
+) -> bool:
+    """Checks if a path is a compressed file."""
+    if path.endswith((".zip",".gz",".tar",".tgz")):
+        return True
+    else:
+        return False    
 
 def _get_paths(
-    path: str, pattern: str, suffix: str, recursive: bool
+    path: str, pattern: str, suffix: str, recursive: bool, compressed: bool
 ) -> Tuple[str, ...]:
     """Returns full paths for all files in a path, with the given suffix."""
-    _path = Path(path)
-
+    
+    if compressed == True:    
+        # get the directory
+        _path = Path(path).parent
+        # get the suffix 
+        suffix = Path(path).suffix
+        
+    else:
+        _path = Path(path)
+        
     if not _path.is_dir():
         raise NotADirectoryError(
             f'"{str(_path)}" is not a directory.',

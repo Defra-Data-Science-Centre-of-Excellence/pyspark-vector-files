@@ -372,11 +372,17 @@ def read_vector_files(
     """
     _concurrency_strategy = ConcurrencyStrategy(concurrency_strategy)
 
+    compressed = _check_compressed(path=path)
+
+    if compressed == True and vsi_prefix == None:
+        raise Exception("vsi_prefix must be provided for compressed files.")
+
     paths = _get_paths(
         path=path,
         pattern=pattern,
         suffix=suffix,
         recursive=recursive,
+        compressed=compressed
     )
 
     if vsi_prefix:
