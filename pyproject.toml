@@ -41,6 +41,7 @@ ipykernel = "^6.15.1"
 geopandas = "^0.11.1"
 nox-poetry = "^1.0.1"
 piccolo-theme = "^0.11.1"
+pytest-datadir = "^1.4.1"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
