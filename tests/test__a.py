@@ -21,7 +21,6 @@ Don't worry about s3
 - How does this fit in with the single path case?
 
 Think about....
-- Changing between Path and string - can we reduce this and stick primarily with string
 - need some logic in the prefixing how to introduce other extensions e.g. tar
 - whats the pythonic way of doing a case statement? (homework)
 
@@ -34,15 +33,23 @@ from typing import Any, Sequence, Union
 import pytest
 from pytest import raises
 
+# vsi lookup dict
+lookup = {
+        '.zip': '/vsizip/',
+        '.gz': '/vsigzip/',
+        #'.tar': '/vsitar/'
+        #'.tar.gz': '/vsitar/' - deal with before individual tar/gz
+    }
 
 def process_path(
     file_path: Union[Path, str],
 ) -> Sequence[str]:
     """Process a given path."""
+    _file_path = str(file_path)
     if not is_http(file_path):
-        paths = glob_all(file_path)
+        paths = glob_all(_file_path)
     else:
-        paths = [str(file_path)]
+        paths = [_file_path]
     if not paths:
         raise ValueError("Pattern matching has not returned any paths.")
     prefixed_paths = prefix_paths(paths)
@@ -65,37 +72,32 @@ def is_http(
 
 
 def glob_all(
-    file_path: Union[Path, str],
+    file_path: str,
 ) -> Sequence[str]:
     """Glob a given path including matching wildcards."""
-    _path = str(file_path)
-    return glob(_path)
+    return glob(file_path)
 
 
 def prefix_path(
-    file_path: Union[Path, str],
+    file_path: str,
 ) -> str:
-    """Prefix a path with the correct GDAL prefix.
-
+    """Prefix a path with the correct GDAL prefix, if required.
     Args:
-        file_path (Union[Path, str]): #TODO.
-
+        file_path str: A file path without required prefixes.
     Returns:
-        str: #TODO.
+        str: A file path with required prefixes.
     """
-    
-    _file_path = str(file_path)
-    
-    if isinstance(file_path, str) and file_path.startswith('http'):
+    _file_path = file_path
+    if file_path.startswith('http'):
         _file_path = f"/vsicurl/{_file_path}"
-    
-    if file_path.endswith('.zip'):
-        return f"/vsizip/{_file_path}"
-    
-    return str(_file_path)
+        
+    s = Path(file_path).suffix
+    prefix = lookup.get(s, '')
+    _file_path = f"{prefix}{_file_path}"
+    return _file_path
 
 
-def prefix_paths(paths: Sequence[Union[Path, str]]) -> Sequence[str]:
+def prefix_paths(paths: Sequence[str]) -> Sequence[str]:
     """Run prefix_path over a list of paths."""
     return [prefix_path(path) for path in paths]
 
