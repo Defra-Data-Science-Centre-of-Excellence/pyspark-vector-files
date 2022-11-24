@@ -24,7 +24,6 @@ Think about....
 - Changing between Path and string - can we reduce this and stick primarily with string
 - need some logic in the prefixing how to introduce other extensions e.g. tar
 - whats the pythonic way of doing a case statement? (homework)
-- in prefix path vsizip is called twice, can this be reduced?
 
 """
 from contextlib import nullcontext as does_not_raise
@@ -84,18 +83,16 @@ def prefix_path(
     Returns:
         str: #TODO.
     """
-    if isinstance(file_path, str) and file_path.startswith("http"):
-        if file_path.endswith(".zip"):
-            return f"/vsizip/vsicurl/{file_path}"
-        return f"/vsicurl/{file_path}"
-
-    _path = Path(file_path)
-    _suffix = _path.suffix
-
-    if _suffix == ".zip":
-        return f"/vsizip/{file_path}"
-
-    return str(file_path)
+    
+    _file_path = str(file_path)
+    
+    if isinstance(file_path, str) and file_path.startswith('http'):
+        _file_path = f"/vsicurl/{_file_path}"
+    
+    if file_path.endswith('.zip'):
+        return f"/vsizip/{_file_path}"
+    
+    return str(_file_path)
 
 
 def prefix_paths(paths: Sequence[Union[Path, str]]) -> Sequence[str]:
@@ -154,7 +151,7 @@ def prefix_paths(paths: Sequence[Union[Path, str]]) -> Sequence[str]:
             "http://path/to/file.zip",
             does_not_raise(),
             [
-                "/vsizip/vsicurl/http://path/to/file.zip",
+                "/vsizip//vsicurl/http://path/to/file.zip",
             ],
         ),
         (
@@ -178,7 +175,7 @@ def prefix_paths(paths: Sequence[Union[Path, str]]) -> Sequence[str]:
             "https://path/to/file.zip",
             does_not_raise(),
             [
-                "/vsizip/vsicurl/https://path/to/file.zip",
+                "/vsizip//vsicurl/https://path/to/file.zip",
             ],
         ),
         (
