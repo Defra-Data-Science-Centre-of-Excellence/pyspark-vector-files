@@ -24,6 +24,11 @@ Think about....
 - need some logic in the prefixing how to introduce other extensions e.g. tar
 - whats the pythonic way of doing a case statement? (homework)
 
+
+25/11/2022:
+
+- Continue adding tests for all tar/gz combinations (renamed compressed to zipped)
+
 """
 from contextlib import nullcontext as does_not_raise
 from glob import glob
@@ -34,11 +39,12 @@ import pytest
 from pytest import raises
 
 # vsi lookup dict
-lookup = {
-        '.zip': '/vsizip/',
-        '.gz': '/vsigzip/',
-        #'.tar': '/vsitar/'
-        #'.tar.gz': '/vsitar/' - deal with before individual tar/gz
+vsi_lookup = {
+        ('.zip',): '/vsizip/',
+        ('.gz',): '/vsigzip/',
+        ('.tar',): '/vsitar/',
+        ('.tgz',): '/vsitar/',
+        ('.tar', '.gz',): '/vsitar/',
     }
 
 def process_path(
@@ -91,8 +97,8 @@ def prefix_path(
     if file_path.startswith('http'):
         _file_path = f"/vsicurl/{_file_path}"
         
-    s = Path(file_path).suffix
-    prefix = lookup.get(s, '')
+    _suffixes = tuple(Path(file_path).suffixes)
+    prefix = vsi_lookup.get(_suffixes, '')
     _file_path = f"{prefix}{_file_path}"
     return _file_path
 
@@ -138,6 +144,20 @@ def prefix_paths(paths: Sequence[str]) -> Sequence[str]:
             ],
         ),
         (
+            "source_a/dataset_b/format_GZ_b/latest_b/file_1.gz",
+            does_not_raise(),
+            [
+                "/vsigzip/source_a/dataset_b/format_GZ_b/latest_b/file_1.gz",
+            ],
+        ),
+        (
+            Path("source_a/dataset_b/format_GZ_b/latest_b/file_1.gz"),
+            does_not_raise(),
+            [
+                "/vsigzip/source_a/dataset_b/format_GZ_b/latest_b/file_1.gz",
+            ],
+        ),
+        (
             "http://path/to/file.ext",
             does_not_raise(),
             [
@@ -158,6 +178,18 @@ def prefix_paths(paths: Sequence[str]) -> Sequence[str]:
         ),
         (
             Path("http://path/to/file.zip"),
+            raises(ValueError),
+            None,
+        ),
+        (
+            "http://path/to/file.gz",
+            does_not_raise(),
+            [
+                "/vsigzip//vsicurl/http://path/to/file.gz",
+            ],
+        ),
+        (
+            Path("http://path/to/file.gz"),
             raises(ValueError),
             None,
         ),
@@ -216,12 +248,16 @@ def prefix_paths(paths: Sequence[str]) -> Sequence[str]:
     ids=(
         "Path as str",
         "Path as Path",
-        "compressed path as string",
-        "compressed path as Path",
+        "zipped path as string",
+        "zipped path as Path",
+        "gzipped path as string",
+        "gzipped path as Path",
         "network path as string",
         "network path as Path",
-        "network compressed path as string",
-        "network compressed path as Path",
+        "network zipped path as string",
+        "network zipped path as Path",
+        "network gzipped path as string",
+        "network gzipped path as Path",
         "secure network path as string",
         "secure network path as Path",
         "secure network compressed path as string",
@@ -248,3 +284,5 @@ def test_process_paths(
         outputs = process_path(_path)
         _outputs = sorted(str(output).replace(f"{datadir}/", "") for output in outputs)
         assert _outputs == sorted(expected_outputs)
+
+
