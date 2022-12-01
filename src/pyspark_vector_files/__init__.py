@@ -217,7 +217,6 @@ from pyspark.sql.types import (
 )
 
 from pyspark_vector_files._files import (
-    _add_vsi_prefix,
     _create_chunks_sdf,
     _create_paths_sdf,
     _get_data_sources,
@@ -378,12 +377,6 @@ def read_vector_files(
         suffix=suffix,
         recursive=recursive,
     )
-
-    if vsi_prefix:
-        paths = _add_vsi_prefix(
-            paths=paths,
-            vsi_prefix=vsi_prefix,
-        )
 
     if _concurrency_strategy == ConcurrencyStrategy.FILES:
 
