@@ -1,6 +1,7 @@
 from functools import singledispatch
+from glob import glob
 from pathlib import Path
-from typing import Optional, Tuple, Union
+from typing import Optional, Sequence, Tuple, Union
 
 from more_itertools import pairwise
 from osgeo.ogr import DataSource, Layer, Open
@@ -17,38 +18,98 @@ from pyspark.sql.types import (
 
 from pyspark_vector_files._types import Chunks
 
+# vsi lookup dict
+vsi_lookup = {
+    (".zip",): "/vsizip/",
+    (".gz",): "/vsigzip/",
+    (".tar",): "/vsitar/",
+    (".tgz",): "/vsitar/",
+    (
+        ".tar",
+        ".gz",
+    ): "/vsitar/",
+}
+
+
+def is_http(
+    file_path: str,
+) -> bool:
+    """Check if a path is a URL and whether its valid."""
+    if not file_path.startswith("http"):
+        return False
+    elif "*" in file_path:
+        raise ValueError("URLs cannot contain wildcards.")
+    else:
+        return True
+
+
+def prefix_path(
+    file_path: str,
+) -> str:
+    """Prefix a path with the correct GDAL prefix, if required.
+
+    Args:
+        file_path (str): A file path without required prefixes.
+
+    Returns:
+        str: A file path with required prefixes.
+    """
+    _file_path = file_path
+    if file_path.startswith("http"):
+        _file_path = f"/vsicurl/{_file_path}"
+
+    _suffixes = tuple(Path(file_path).suffixes)
+    prefix = vsi_lookup.get(_suffixes, "")
+    _file_path = f"{prefix}{_file_path}"
+    return _file_path
+
+
+def prefix_paths(paths: Sequence[str]) -> Tuple[str, ...]:
+    """Run prefix_path over a list of paths."""
+    return tuple(prefix_path(path) for path in paths)
+
+
+def _process_path(
+    path: str,
+    pattern: str,
+    suffix: str,
+    recursive: bool,
+) -> str:
+    """Flexibly construct a path from different elements."""
+    if not path.endswith("/"):
+        return path
+    else:
+        return f"{path}{pattern}{suffix}"
+
 
 def _get_paths(
-    path: str, pattern: str, suffix: str, recursive: bool
+    path: Union[str, Path],
+    pattern: str,
+    suffix: str,
+    recursive: bool,
 ) -> Tuple[str, ...]:
-    """Returns full paths for all files in a path, with the given suffix."""
-    _path = Path(path)
+    """Process a given path."""
+    if str(path).startswith("http") and isinstance(path, Path):
+        raise ValueError("URLs must be provided as a string.")
 
-    if not _path.is_dir():
-        raise NotADirectoryError(
-            f'"{str(_path)}" is not a directory.',
-        )
+    _path = str(path)
 
-    _suffix = suffix.strip(".")
+    processed_path = _process_path(
+        path=_path,
+        pattern=pattern,
+        suffix=suffix,
+        recursive=recursive,
+    )
 
-    if recursive:
-        paths = tuple(str(path) for path in _path.rglob(f"{pattern}.{_suffix}"))
+    if is_http(processed_path):
+        paths = [processed_path]
     else:
-        paths = tuple(str(path) for path in _path.glob(f"{pattern}.{_suffix}"))
+        paths = glob(processed_path)
+    if not paths:
+        raise ValueError("Pattern matching has not returned any paths.")
 
-    if len(paths) == 0:
-        raise FileNotFoundError(
-            f'No files found for: path: "{path}", pattern: "{pattern}", suffix: "{suffix}", recursive: {recursive}.',  # noqa: B950
-        )
-    else:
-        return paths
-
-
-def _add_vsi_prefix(paths: Tuple[str, ...], vsi_prefix: str) -> Tuple[str, ...]:
-    """Adds GDAL virtual file system prefix to the paths."""
-    _vsi_prefix = vsi_prefix.strip("/")
-    _paths = tuple(path.lstrip("/") for path in paths)
-    return tuple("/" + _vsi_prefix + "//" + path for path in _paths)
+    prefixed_paths = prefix_paths(paths)
+    return prefixed_paths
 
 
 def _get_data_sources(paths: Tuple[str, ...]) -> Tuple[DataSource, ...]:
