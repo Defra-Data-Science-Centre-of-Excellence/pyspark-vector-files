@@ -1,7 +1,7 @@
 """Tests for _pyspark module."""
 from contextlib import nullcontext as does_not_raise
 from pathlib import Path
-from typing import ContextManager, Optional, Tuple, Union
+from typing import Any, ContextManager, List, Optional, Tuple, Union
 
 import pytest
 from _pytest.fixtures import FixtureRequest
@@ -12,7 +12,6 @@ from pyspark.sql import SparkSession
 from pytest import raises
 
 from pyspark_vector_files._files import (
-    _add_vsi_prefix,
     _create_chunks_sdf,
     _create_paths_sdf,
     _get_chunks,
@@ -25,75 +24,285 @@ from pyspark_vector_files._files import (
     _get_paths,
     _get_sequence_of_chunks,
     _get_total_chunks,
+    _process_path,
 )
 from pyspark_vector_files._types import Chunks
 
 
 @pytest.mark.parametrize(
     argnames=[
+        "path",
         "pattern",
-        "expected_paths",
+        "suffix",
+        "recursive",
+        "expected_path",
     ],
     argvalues=[
-        ("*", "all_fileGDB_paths"),
-        ("first*", "first_fileGDB_path"),
+        (
+            "source_a/dataset_b/format_EXT_b/latest_b/file_1.ext",
+            "*",
+            ".*",
+            False,
+            "source_a/dataset_b/format_EXT_b/latest_b/file_1.ext",
+        ),
+        (
+            "source_a/dataset_b/format_EXT_b/latest_b/file_1.ext",
+            "file_1",
+            ".ext",
+            False,
+            "source_a/dataset_b/format_EXT_b/latest_b/file_1.ext",
+        ),
+        (
+            "source_a/dataset_b/format_EXT_b/latest_b/",
+            "*",
+            ".*",
+            False,
+            "source_a/dataset_b/format_EXT_b/latest_b/*.*",
+        ),
+        (
+            "source_a/dataset_b/format_EXT_b/latest_b/",
+            "*",
+            ".ext",
+            False,
+            "source_a/dataset_b/format_EXT_b/latest_b/*.ext",
+        ),
+        (
+            "source_a/dataset_b/format_EXT_b/latest_b/",
+            "file_1",
+            ".*",
+            False,
+            "source_a/dataset_b/format_EXT_b/latest_b/file_1.*",
+        ),
+        (
+            "source_a/dataset_b/format_EXT_b/latest_b/",
+            "file_1",
+            ".ext",
+            False,
+            "source_a/dataset_b/format_EXT_b/latest_b/file_1.ext",
+        ),
     ],
     ids=[
-        "Star",
-        "First star",
+        "Full path and wildcards",
+        "Full path, pattern, and suffix",
+        "Directory path and wildcards",
+        "Directory path, wildcard pattern, and suffix",
+        "Directory path, pattern, and wildcard suffix",
+        "Directory path, suffix, and pattern",
     ],
 )
-def test__get_paths(
-    fileGDB_directory_path: Path,
+def test__process_path(
+    path: str,
     pattern: str,
-    expected_paths: str,
-    request: FixtureRequest,
+    suffix: str,
+    recursive: bool,
+    expected_path: str,
 ) -> None:
-    """Returns collection of FileGDB file paths."""
-    paths = _get_paths(
-        path=str(fileGDB_directory_path),
+    """Creates a full path from components or passes on a complete full path."""
+    _path = _process_path(
+        path=path,
         pattern=pattern,
-        suffix="gdb",
-        recursive=False,
+        suffix=suffix,
+        recursive=recursive,
     )
-
-    _expected_paths = request.getfixturevalue(expected_paths)
-
-    if isinstance(_expected_paths, str):
-        assert paths == (_expected_paths,)
-    else:
-        assert sorted(paths) == sorted(_expected_paths)
+    assert _path == expected_path
 
 
 @pytest.mark.parametrize(
-    argnames=[
-        "vsi_prefix",
-    ],
-    argvalues=[
-        ("/vsigzip/",),
-        ("vsigzip",),
-        ("/vsigzip",),
-        ("vsigzip/",),
-    ],
-    ids=[
-        "Wrapped by slashes",
-        "No slashes",
-        "Prefixed with slash",
-        "Postfixed with slash",
-    ],
+    argnames=(
+        "file_path",
+        "expected_exception",
+        "expected_outputs",
+    ),
+    argvalues=(
+        (
+            "source_a/dataset_b/format_EXT_b/latest_b/file_1.ext",
+            does_not_raise(),
+            [
+                "source_a/dataset_b/format_EXT_b/latest_b/file_1.ext",
+            ],
+        ),
+        (
+            "source_a/dataset_b/format_ZIP_b/latest_b/file_1.zip",
+            does_not_raise(),
+            [
+                "/vsizip/source_a/dataset_b/format_ZIP_b/latest_b/file_1.zip",
+            ],
+        ),
+        (
+            "source_a/dataset_b/format_GZ_b/latest_b/file_1.gz",
+            does_not_raise(),
+            [
+                "/vsigzip/source_a/dataset_b/format_GZ_b/latest_b/file_1.gz",
+            ],
+        ),
+        (
+            "source_a/dataset_b/format_TGZ_b/latest_b/file_1.tar.gz",
+            does_not_raise(),
+            [
+                "/vsitar/source_a/dataset_b/format_TGZ_b/latest_b/file_1.tar.gz",
+            ],
+        ),
+        (
+            "http://path/to/file.ext",
+            does_not_raise(),
+            [
+                "/vsicurl/http://path/to/file.ext",
+            ],
+        ),
+        (
+            "http://path/to/file.zip",
+            does_not_raise(),
+            [
+                "/vsizip//vsicurl/http://path/to/file.zip",
+            ],
+        ),
+        (
+            "http://path/to/file.gz",
+            does_not_raise(),
+            [
+                "/vsigzip//vsicurl/http://path/to/file.gz",
+            ],
+        ),
+        (
+            "http://path/to/file.tar.gz",
+            does_not_raise(),
+            [
+                "/vsitar//vsicurl/http://path/to/file.tar.gz",
+            ],
+        ),
+        (
+            "https://path/to/file.ext",
+            does_not_raise(),
+            [
+                "/vsicurl/https://path/to/file.ext",
+            ],
+        ),
+        (
+            "https://path/to/file.zip",
+            does_not_raise(),
+            [
+                "/vsizip//vsicurl/https://path/to/file.zip",
+            ],
+        ),
+        (
+            "https://path/to/file.gz",
+            does_not_raise(),
+            [
+                "/vsigzip//vsicurl/https://path/to/file.gz",
+            ],
+        ),
+        (
+            "https://path/to/file.tar.gz",
+            does_not_raise(),
+            [
+                "/vsitar//vsicurl/https://path/to/file.tar.gz",
+            ],
+        ),
+        (
+            "source_a/dataset_b/format_EXT_b/latest_b/file_*.ext",
+            does_not_raise(),
+            [
+                "source_a/dataset_b/format_EXT_b/latest_b/file_1.ext",
+                "source_a/dataset_b/format_EXT_b/latest_b/file_2.ext",
+            ],
+        ),
+        (
+            "source_a/dataset_b/format_ZIP_b/latest_b/file_*.zip",
+            does_not_raise(),
+            [
+                "/vsizip/source_a/dataset_b/format_ZIP_b/latest_b/file_1.zip",
+                "/vsizip/source_a/dataset_b/format_ZIP_b/latest_b/file_2.zip",
+            ],
+        ),
+        (
+            "source_a/dataset_b/format_GZ_b/latest_b/file_*.gz",
+            does_not_raise(),
+            [
+                "/vsigzip/source_a/dataset_b/format_GZ_b/latest_b/file_1.gz",
+                "/vsigzip/source_a/dataset_b/format_GZ_b/latest_b/file_2.gz",
+            ],
+        ),
+        (
+            "source_a/dataset_b/format_TGZ_b/latest_b/file_*.tar.gz",
+            does_not_raise(),
+            [
+                "/vsitar/source_a/dataset_b/format_TGZ_b/latest_b/file_1.tar.gz",
+                "/vsitar/source_a/dataset_b/format_TGZ_b/latest_b/file_2.tar.gz",
+            ],
+        ),
+        (
+            "source_a/dataset_*/format_EXT_*/latest_*/file_*.ext",
+            does_not_raise(),
+            [
+                "source_a/dataset_b/format_EXT_b/latest_b/file_1.ext",
+                "source_a/dataset_b/format_EXT_b/latest_b/file_2.ext",
+                "source_a/dataset_c/format_EXT_c/latest_c/file_3.ext",
+            ],
+        ),
+        (
+            "source_a/dataset_*/format_ZIP_*/latest_*/file_*.zip",
+            does_not_raise(),
+            [
+                "/vsizip/source_a/dataset_b/format_ZIP_b/latest_b/file_1.zip",
+                "/vsizip/source_a/dataset_b/format_ZIP_b/latest_b/file_2.zip",
+                "/vsizip/source_a/dataset_c/format_ZIP_c/latest_c/file_3.zip",
+            ],
+        ),
+        (
+            "source_a/dataset_b/format_EXT_b/latest_b/not_a_file_*.ext",
+            raises(ValueError),
+            None,
+        ),
+        (
+            "https://path/to/*.zip",
+            raises(ValueError),
+            None,
+        ),
+    ),
+    ids=(
+        "Uncompressed path",
+        "Zipped path",
+        "Gzipped path",
+        "Compressed tar path",
+        "Network uncompressed path",
+        "Network zipped path",
+        "Network gzipped path",
+        "Network compressed tar path",
+        "Secure network uncompressed path",
+        "Secure network zipped path",
+        "Secure network gzipped path",
+        "Secure network compressed tar path",
+        "Uncompressed single wildcard",
+        "Zipped single wildcard",
+        "Gzipped single wildcard",
+        "Compressed tar single wildcard",
+        "Uncompressed multiple wildcards",
+        "Zipped multiple wildcards",
+        "Bad wildcard",
+        "Http wildcard",
+    ),
 )
-def test__add_vsi_prefix(
-    first_fileGDB_path: str,
-    second_fileGDB_path: str,
-    vsi_prefix: str,
+def test__get_paths(
+    datadir: Path,
+    expected_exception: Any,
+    file_path: Union[Path, str],
+    expected_outputs: List[str],
 ) -> None:
-    """VSI prefix is prepended to paths."""
-    _paths = (first_fileGDB_path, second_fileGDB_path)
-    prefixed_paths = _add_vsi_prefix(paths=_paths, vsi_prefix=vsi_prefix)
-    assert prefixed_paths == (
-        "/" + vsi_prefix.strip("/") + "/" + first_fileGDB_path,
-        "/" + vsi_prefix.strip("/") + "/" + second_fileGDB_path,
-    )
+    """."""
+    with expected_exception:
+        _path: Union[Path, str]
+        if not str(file_path).startswith("http"):
+            _path = datadir / file_path
+        else:
+            _path = file_path
+        outputs = _get_paths(
+            path=_path,
+            pattern="*",
+            suffix=".*",
+            recursive=False,
+        )
+        _outputs = sorted(str(output).replace(f"{datadir}/", "") for output in outputs)
+        assert _outputs == sorted(expected_outputs)
 
 
 def test__get_data_sources(
