@@ -31,7 +31,7 @@ vsi_lookup = {
 }
 
 
-def is_http(
+def _is_http(
     file_path: str,
 ) -> bool:
     """Check if a path is a URL and whether its valid."""
@@ -43,7 +43,7 @@ def is_http(
         return True
 
 
-def prefix_path(
+def _prefix_path(
     file_path: str,
 ) -> str:
     """Prefix a path with the correct GDAL prefix, if required.
@@ -64,9 +64,9 @@ def prefix_path(
     return _file_path
 
 
-def prefix_paths(paths: Sequence[str]) -> Tuple[str, ...]:
-    """Run prefix_path over a list of paths."""
-    return tuple(prefix_path(path) for path in paths)
+def _prefix_paths(paths: Sequence[str]) -> Tuple[str, ...]:
+    """Run _prefix_path over a list of paths."""
+    return tuple(_prefix_path(path) for path in paths)
 
 
 def _process_path(
@@ -101,14 +101,14 @@ def _get_paths(
         recursive=recursive,
     )
 
-    if is_http(processed_path):
+    if _is_http(processed_path):
         paths = [processed_path]
     else:
         paths = glob(processed_path)
     if not paths:
         raise ValueError("Pattern matching has not returned any paths.")
 
-    prefixed_paths = prefix_paths(paths)
+    prefixed_paths = _prefix_paths(paths)
     return prefixed_paths
 
 
