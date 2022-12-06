@@ -7,7 +7,7 @@ import nox
 from nox_poetry import Session, session
 
 package = "pyspark_vector_files"
-nox.options.sessions = "isort", "black", "lint", "safety", "mypy"  # , "tests"
+nox.options.sessions = "isort", "black", "lint", "safety", "mypy", "tests"
 locations = "src", "tests", "noxfile.py"
 # locations = "src", "tests", "noxfile.py", "docs/source/conf.py"
 

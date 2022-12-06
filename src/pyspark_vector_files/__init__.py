@@ -229,6 +229,7 @@ from pyspark_vector_files._files import (
 from pyspark_vector_files._parallel_reader import (
     _generate_parallel_reader_for_chunks,
     _generate_parallel_reader_for_files,
+    _pdf_from_vector_file,
 )
 from pyspark_vector_files._schema import (
     _create_schema_for_chunks,
@@ -309,6 +310,7 @@ def temporary_spark_context(
 
 def read_vector_files(
     path: str,
+    spark: Optional[SparkSession] = None,
     ogr_to_spark_type_map: MappingProxyType = OGR_TO_SPARK,
     pattern: str = "*",
     suffix: str = "*",
@@ -327,6 +329,7 @@ def read_vector_files(
 
     Args:
         path (str): Path to a folder of vector files.
+        spark(Optional[SparkSession]): Optional spark session.
         ogr_to_spark_type_map (MappingProxyType): A mapping of OGR to Spark data
             types. Defaults to OGR_TO_SPARK.
         pattern (str): A filename pattern. This will be passed to to `pathlib`'s
@@ -366,6 +369,9 @@ def read_vector_files(
         SparkDataFrame: A Spark DataFrame with geometry encoded as
             `Well Known Binary (WKB)`_.
 
+    Raises:
+        ValueError: If no files are found.
+
     .. _`Well Known Binary (WKB)`:
         https://libgeos.org/specifications/wkb/
     """
@@ -378,7 +384,36 @@ def read_vector_files(
         recursive=recursive,
     )
 
-    if _concurrency_strategy == ConcurrencyStrategy.FILES:
+    if not paths:
+        raise ValueError("")
+    else:
+        _schema = (
+            schema
+            if schema
+            else _create_schema_for_files(
+                path=paths[0],
+                layer_identifier=layer_identifier,
+                ogr_to_spark_type_map=ogr_to_spark_type_map,
+                geom_field_name=geom_field_name,
+                geom_field_type=geom_field_type,
+            )
+        )
+
+    if len(paths) == 1 and _concurrency_strategy == ConcurrencyStrategy.FILES:
+
+        _file_gdf = _pdf_from_vector_file(
+            path=paths[0],
+            layer_identifier=layer_identifier,
+            geom_field_name=geom_field_name,
+            coerce_to_schema=coerce_to_schema,
+            spark_to_pandas_type_map=spark_to_pandas_type_map,
+            schema=_schema,
+        )
+        _spark = spark or SparkSession.getActiveSession()
+        sdf: SparkDataFrame = _spark.createDataFrame(_file_gdf)
+        return sdf
+
+    elif _concurrency_strategy == ConcurrencyStrategy.FILES:
 
         number_of_partitions = len(paths)
 
@@ -390,18 +425,6 @@ def read_vector_files(
             df = _create_paths_sdf(
                 spark=spark,
                 paths=paths,
-            )
-
-            _schema = (
-                schema
-                if schema
-                else _create_schema_for_files(
-                    path=paths[0],
-                    layer_identifier=layer_identifier,
-                    ogr_to_spark_type_map=ogr_to_spark_type_map,
-                    geom_field_name=geom_field_name,
-                    geom_field_type=geom_field_type,
-                )
             )
 
             parallel_read = _generate_parallel_reader_for_files(
@@ -419,6 +442,7 @@ def read_vector_files(
             )
 
     else:
+
         data_sources = _get_data_sources(paths)
 
         layer_names = _get_layer_names(
@@ -448,18 +472,6 @@ def read_vector_files(
                 paths=paths,
                 layer_names=layer_names,
                 sequence_of_chunks=sequence_of_chunks,
-            )
-
-            _schema = (
-                schema
-                if schema
-                else _create_schema_for_chunks(
-                    data_source=data_sources[0],
-                    layer_name=layer_names[0],
-                    ogr_to_spark_type_map=ogr_to_spark_type_map,
-                    geom_field_name=geom_field_name,
-                    geom_field_type=geom_field_type,
-                )
             )
 
             parallel_read = _generate_parallel_reader_for_chunks(

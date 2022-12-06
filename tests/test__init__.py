@@ -201,6 +201,7 @@ def test_temporary_spark_context(
 def test_read_vector_files(
     request: FixtureRequest,
     path: str,
+    spark_context: SparkSession,
     pattern: str,
     suffix: str,
     ideal_chunk_size: int,
@@ -214,6 +215,7 @@ def test_read_vector_files(
     """Returns expected SparkDataFrames from different combinations of args."""
     sdf = read_vector_files(
         path=request.getfixturevalue(path),
+        spark=spark_context,
         pattern=pattern,
         suffix=suffix,
         ideal_chunk_size=ideal_chunk_size,
