@@ -24,8 +24,8 @@ from pytest import fixture
 from shapely.geometry import Point
 from shapely.geometry.base import BaseGeometry
 
-from pyspark_vector_files import OGR_TO_SPARK, SPARK_TO_PANDAS
 from pyspark_vector_files._types import Chunks
+from pyspark_vector_files.constants import OGR_TO_SPARK, SPARK_TO_PANDAS
 
 
 @fixture
