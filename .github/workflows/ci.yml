@@ -9,7 +9,7 @@ on:
 jobs:
   format:
     name: Format
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -24,7 +24,7 @@ jobs:
         run: poetry run nox -s isort black
   static-type-analysis:
     name: Static type analysis
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -39,7 +39,7 @@ jobs:
         run: poetry run nox -s mypy
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
         run: poetry run nox -s tests
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3

@@ -64,7 +64,7 @@ def test__get_properties(first_fileGDB_path: str) -> None:
             "first",
             (
                 bytearray(
-                    b"\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"  # noqa: B950
+                    b"\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"  # noqa: B950
                 ),
             ),
         ),
