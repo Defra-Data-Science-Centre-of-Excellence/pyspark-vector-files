@@ -70,7 +70,7 @@ def test__get_property_types(first_fileGDB_path: str) -> None:
     data_source = Open(first_fileGDB_path)
     layer = data_source.GetLayer()
     property_types = _get_property_types(layer=layer)
-    assert property_types == ("Integer64", "String")
+    assert property_types == ((12, 0), (4, 0))  # (OFTInteger64, OFTString)
 
 
 def test__get_feature_schema(
