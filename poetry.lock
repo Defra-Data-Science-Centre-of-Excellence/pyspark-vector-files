@@ -503,6 +503,19 @@ python-versions = ">=3.7"
 gitdb = ">=4.0.1,<5"
 
 [[package]]
+name = "graphviz"
+version = "0.20.1"
+description = "Simple Python interface for Graphviz"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+dev = ["tox (>=3)", "flake8", "pep8-naming", "wheel", "twine"]
+docs = ["sphinx (>=5)", "sphinx-autodoc-typehints", "sphinx-rtd-theme"]
+test = ["pytest (>=7)", "pytest-mock (>=3)", "mock (>=4)", "pytest-cov", "coverage"]
+
+[[package]]
 name = "identify"
 version = "2.5.3"
 description = "File identification library for Python"
@@ -1586,7 +1599,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.8"
-content-hash = "7a2fcc0b0af9d53174f2bae64094e666b705ba5a9dc48968163e7fd68bd34249"
+content-hash = "1f2a9285a733f8117dce6cc88e0dcf90def069dd44714e0d33fcd2a4d6c8dae9"
 
 [metadata.files]
 alabaster = []
@@ -1632,6 +1645,7 @@ gdal = []
 geopandas = []
 gitdb = []
 gitpython = []
+graphviz = []
 identify = []
 idna = []
 imagesize = []
