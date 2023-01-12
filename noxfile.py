@@ -59,6 +59,9 @@ def safety(session: Session) -> None:
         # ! Ignoring GDAL vulnerability as v3.4.3 is the latest version
         # ! available through ubuntugis-unstable (EFT, 2022-08-10)
         "--ignore=48545",
+        # ! Ignoring GDAL vulnerability as v3.4.3 is the latest version
+        # ! available through ubuntugis-unstable (EFT, 2023-01-12)
+        "--ignore=51832",
     )
 
 
