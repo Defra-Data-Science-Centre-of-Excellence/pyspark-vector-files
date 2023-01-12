@@ -2,7 +2,7 @@ from itertools import compress
 from types import MappingProxyType
 from typing import Callable, Generator, Optional, Tuple, Union
 
-from osgeo.ogr import Feature, Layer, Open, wkbXDR
+from osgeo.ogr import Feature, Layer, Open
 from pandas import DataFrame as PandasDataFrame
 from pandas import Series
 from pyspark.sql.types import DataType, StructType
@@ -33,7 +33,7 @@ def _get_geometry(feature: Feature) -> Tuple[Optional[bytearray]]:
     """Given a GDAL Feature, return the geometry field, if there is one."""
     geometry = feature.GetGeometryRef()
     if geometry:
-        return (geometry.ExportToWkb(wkbXDR),)
+        return (geometry.ExportToWkb(),)
     else:
         return (None,)
 
