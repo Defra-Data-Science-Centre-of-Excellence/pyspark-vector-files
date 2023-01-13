@@ -154,7 +154,9 @@ def _get_feature_counts(
 ) -> Tuple[int, ...]:
     return tuple(
         _get_feature_count(data_source=data_source, layer_name=layer_name)
-        for data_source, layer_name in zip(data_sources, layer_names)
+        for data_source, layer_name in zip(  # noqa: B905 no strict parameter in 3.8.10
+            data_sources, layer_names
+        )
     )
 
 
@@ -207,7 +209,7 @@ def _create_chunks_sdf(
             layer_name=layer_name,
             chunks=chunks,
         )
-        for path, layer_name, chunks in zip(
+        for path, layer_name, chunks in zip(  # noqa: B905 no strict parameter in 3.8.10
             paths,
             layer_names,
             sequence_of_chunks,
