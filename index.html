@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>PySpark Vector Files &#8212; PySpark Vector Files alpha documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -14,6 +14,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -147,13 +148,13 @@
 <h2>Install <code class="docutils literal notranslate"><span class="pre">pyspark-vector-files</span></code><a class="headerlink" href="#install-pyspark-vector-files" title="Permalink to this heading">¶</a></h2>
 <section id="within-a-databricks-notebook">
 <h3>Within a Databricks notebook<a class="headerlink" href="#within-a-databricks-notebook" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%pip install pyspark-vector-files
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%pip<span class="w"> </span>install<span class="w"> </span>pyspark-vector-files
 </pre></div>
 </div>
 </section>
 <section id="from-the-command-line">
 <h3>From the command line<a class="headerlink" href="#from-the-command-line" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python -m pip install pyspark-vector-files
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>pyspark-vector-files
 </pre></div>
 </div>
 </section>
@@ -178,11 +179,11 @@
 <h3>Install <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8.10</span></code> using <a class="reference external" href="https://github.com/pyenv/pyenv">pyenv</a><a class="headerlink" href="#install-python-3-8-10-using-pyenv" title="Permalink to this heading">¶</a></h3>
 <p>See the <code class="docutils literal notranslate"><span class="pre">pyenv-installer</span></code>’s <a class="reference external" href="https://github.com/pyenv/pyenv-installer#installation--update--uninstallation">Installation / Update / Uninstallation</a> instructions.</p>
 <p>Install Python 3.8.10 globally:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pyenv install <span class="m">3</span>.8.10
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pyenv<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.8.10
 </pre></div>
 </div>
 <p>Then install it locally in the repository you’re using:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pyenv <span class="nb">local</span> <span class="m">3</span>.8.10
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pyenv<span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="m">3</span>.8.10
 </pre></div>
 </div>
 </section>
@@ -190,20 +191,20 @@
 <h3>Install <code class="docutils literal notranslate"><span class="pre">GDAL</span> <span class="pre">3.4.3</span></code><a class="headerlink" href="#install-gdal-3-4-3" title="Permalink to this heading">¶</a></h3>
 <p>Add the <a class="reference external" href="https://launchpad.net/~ubuntugis/+archive/ubuntu/ubuntugis-unstable">UbuntuGIS unstable Private Package Archive (PPA)</a>
 and update your package list:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable <span class="se">\</span>
-    <span class="o">&amp;&amp;</span> sudo apt-get update
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:ubuntugis/ubuntugis-unstable<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 </pre></div>
 </div>
 <p>Install <code class="docutils literal notranslate"><span class="pre">gdal</span> <span class="pre">3.4.3</span></code>, I found I also had to install python3-gdal (even though
 I’m going to use poetry to install it in a virtual environment later) to
 avoid version conflicts:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo apt-get install -y gdal-bin<span class="o">=</span><span class="m">3</span>.4.3+dfsg-1~focal0 <span class="se">\</span>
-    libgdal-dev<span class="o">=</span><span class="m">3</span>.4.3+dfsg-1~focal0 <span class="se">\</span>
-    python3-gdal<span class="o">=</span><span class="m">3</span>.4.3+dfsg-1~focal0
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gdal-bin<span class="o">=</span><span class="m">3</span>.4.3+dfsg-1~focal0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>libgdal-dev<span class="o">=</span><span class="m">3</span>.4.3+dfsg-1~focal0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>python3-gdal<span class="o">=</span><span class="m">3</span>.4.3+dfsg-1~focal0
 </pre></div>
 </div>
 <p>Verify the installation:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ogrinfo --version
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ogrinfo<span class="w"> </span>--version
 <span class="c1"># GDAL 3.4.3, released 2022/04/22</span>
 </pre></div>
 </div>
@@ -214,13 +215,13 @@ avoid version conflicts:</p>
 </section>
 <section id="clone-this-repository">
 <h3>Clone this repository<a class="headerlink" href="#clone-this-repository" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/Defra-Data-Science-Centre-of-Excellence/pyspark_vector_files.git
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Defra-Data-Science-Centre-of-Excellence/pyspark_vector_files.git
 </pre></div>
 </div>
 </section>
 <section id="install-dependencies-using-poetry">
 <h3>Install dependencies using <code class="docutils literal notranslate"><span class="pre">poetry</span></code><a class="headerlink" href="#install-dependencies-using-poetry" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>poetry install
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>install
 </pre></div>
 </div>
 </section>
@@ -293,7 +294,7 @@ avoid version conflicts:</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ed Fawcett-Taylor, Dan Lewis.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
