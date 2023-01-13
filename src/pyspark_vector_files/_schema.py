@@ -59,7 +59,9 @@ def _get_feature_schema(
     property_types = _get_property_types(layer=layer)
     property_struct_fields = [
         StructField(field_name, ogr_to_spark_type_map[field_type])
-        for field_name, field_type in zip(property_names, property_types)
+        for field_name, field_type in zip(  # noqa: B905 no strict parameter in 3.8.10
+            property_names, property_types
+        )
     ]
     geometry_struct_field = [
         StructField(geom_field_name, ogr_to_spark_type_map[geom_field_type])

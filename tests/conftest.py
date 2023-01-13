@@ -5,7 +5,7 @@ from types import MappingProxyType
 from typing import List, Tuple
 
 from geopandas import GeoDataFrame, GeoSeries
-from numpy import int64, object0
+from numpy import int64, object_
 from osgeo.ogr import DataSource, Open
 from pandas import DataFrame as PandasDataFrame
 from pandas import Series, concat
@@ -85,7 +85,7 @@ def first_file_first_layer_gdf(
     ).astype(
         {
             "id": int64,
-            "category": object0,
+            "category": object_,
         },
     )
 
@@ -123,7 +123,7 @@ def first_file_first_layer_pdf_with_wrong_types(
     first_file_first_layer_pdf: PandasDataFrame,
 ) -> PandasDataFrame:
     """First layer pdf but all types are object."""
-    return first_file_first_layer_pdf.astype(object0)
+    return first_file_first_layer_pdf.astype(object_)
 
 
 @fixture
@@ -588,8 +588,8 @@ def expected_null_data_frame(
     return PandasDataFrame(columns=layer_column_names).astype(
         {
             "id": int64,
-            "category": object0,
-            "geometry": object0,
+            "category": object_,
+            "geometry": object_,
         },
     )
 

@@ -7,7 +7,7 @@ import nox
 from nox_poetry import Session, session
 
 package = "pyspark_vector_files"
-nox.options.sessions = "isort", "black", "lint", "safety", "mypy"  # , "tests"
+nox.options.sessions = "isort", "black", "lint", "safety", "mypy", "tests"
 locations = "src", "tests", "noxfile.py"
 # locations = "src", "tests", "noxfile.py", "docs/source/conf.py"
 
@@ -59,6 +59,9 @@ def safety(session: Session) -> None:
         # ! Ignoring GDAL vulnerability as v3.4.3 is the latest version
         # ! available through ubuntugis-unstable (EFT, 2022-08-10)
         "--ignore=48545",
+        # ! Ignoring GDAL vulnerability as v3.4.3 is the latest version
+        # ! available through ubuntugis-unstable (EFT, 2023-01-12)
+        "--ignore=51832",
     )
 
 
