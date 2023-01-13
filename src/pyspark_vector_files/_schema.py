@@ -19,9 +19,9 @@ def _get_layer(
     # ! raise an error if the user supplied layer doesn't exist and
     # ! `start` and `stop` are generated within the function.
     if isinstance(start, int) and isinstance(stop, int):
-        sql = f"SELECT * from {layer_name} WHERE FID >= {start} AND FID < {stop}"  # noqa: S608, B950
+        sql = f'SELECT * from "{layer_name}" WHERE FID >= {start} AND FID < {stop}'  # noqa: S608, B950
     else:
-        sql = f"SELECT * from {layer_name}"  # noqa: S608
+        sql = f'SELECT * from "{layer_name}"'  # noqa: S608
 
     return data_source.ExecuteSQL(sql)
 
