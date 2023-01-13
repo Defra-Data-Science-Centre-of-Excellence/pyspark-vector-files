@@ -200,7 +200,7 @@ from contextlib import contextmanager
 from types import MappingProxyType
 from typing import Iterator, Optional, Tuple, Union
 
-from numpy import bool_, float32, float64, int16, int32, int64, object0
+from numpy import bool_, float32, float64, int16, int32, int64, object_
 from pyspark.sql import DataFrame as SparkDataFrame
 from pyspark.sql import SparkSession
 from pyspark.sql.types import (
@@ -276,18 +276,18 @@ SPARK_TO_PANDAS = MappingProxyType(
         IntegerType(): int32,
         BooleanType(): bool_,
         ShortType(): int16,
-        ArrayType(IntegerType()): object0,
-        ArrayType(BooleanType()): object0,
-        ArrayType(ShortType()): object0,
+        ArrayType(IntegerType()): object_,
+        ArrayType(BooleanType()): object_,
+        ArrayType(ShortType()): object_,
         DoubleType(): float64,
         FloatType(): float32,
-        ArrayType(DoubleType()): object0,
-        ArrayType(FloatType()): object0,
-        StringType(): object0,
-        ArrayType(StringType()): object0,
-        BinaryType(): object0,
+        ArrayType(DoubleType()): object_,
+        ArrayType(FloatType()): object_,
+        StringType(): object_,
+        ArrayType(StringType()): object_,
+        BinaryType(): object_,
         LongType(): int64,
-        ArrayType(LongType()): object0,
+        ArrayType(LongType()): object_,
     }
 )
 
