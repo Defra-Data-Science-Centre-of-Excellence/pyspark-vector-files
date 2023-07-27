@@ -9,7 +9,7 @@ repository = "https://github.com/Defra-Data-Science-Centre-of-Excellence/pyspark
 documentation = "https://defra-data-science-centre-of-excellence.github.io/pyspark-vector-files/"
 
 [tool.poetry.dependencies]
-python = "~3.8"
+python = "~3.10"
 more-itertools = "^8.12.0"
 pandas = "1.2.4"
 pyspark = "3.2.1"

@@ -12,7 +12,7 @@ locations = "src", "tests", "noxfile.py"
 # locations = "src", "tests", "noxfile.py", "docs/source/conf.py"
 
 
-@session(python="3.8")
+@session(python="3.10")
 def isort(session: Session) -> None:
     """Sort imports with isort."""
     args = session.posargs or locations
@@ -20,7 +20,7 @@ def isort(session: Session) -> None:
     session.run("isort", *args)
 
 
-@session(python="3.8")
+@session(python="3.10")
 def black(session: Session) -> None:
     """Run black code formatter."""
     args = session.posargs or locations
@@ -28,7 +28,7 @@ def black(session: Session) -> None:
     session.run("black", *args)
 
 
-@session(python="3.8")
+@session(python="3.10")
 def lint(session: Session) -> None:
     """Lint using flake8."""
     args = session.posargs or locations
@@ -46,7 +46,7 @@ def lint(session: Session) -> None:
     session.run("flake8", *args)
 
 
-@session(python="3.8")
+@session(python="3.10")
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
     requirements = session.poetry.export_requirements()
@@ -62,7 +62,7 @@ def safety(session: Session) -> None:
     )
 
 
-@session(python="3.8")
+@session(python="3.10")
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or locations
@@ -71,7 +71,7 @@ def mypy(session: Session) -> None:
     session.run("mypy", *args, "--ignore-missing-imports")
 
 
-@session(python="3.8")
+@session(python="3.10")
 def tests(session: Session) -> None:
     """Run the test suite."""
     args = session.posargs or [
